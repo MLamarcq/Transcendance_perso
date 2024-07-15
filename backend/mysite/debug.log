@@ -1,0 +1,371 @@
+DEBUG 2024-07-15 20:29:24,298 views user participants = lulu
+DEBUG 2024-07-15 20:29:24,305 views user participants = lulu
+DEBUG 2024-07-15 20:29:24,306 views send_message = salut
+DEBUG 2024-07-15 20:29:24,306 views context = {'chat_info': {'list_of_chats': [<Chat: lulu>, <Chat: toto>]}, 'message_info': '{"toto": []}', 'chat_name': 'toto'}
+INFO 2024-07-15 20:39:51,880 views html at ajax
+DEBUG 2024-07-15 20:39:51,881 views html in signup = 
+	
+	<link href="/static/pong/css/signup.css" rel="stylesheet">
+	<h1 class="text-center">CREATE YOUR ACCOUNT</h1>
+
+	<section>
+		<form action="/signup" method="post"  type="file" enctype="multipart/form-data" name="avatar">
+			<input type="hidden" name="csrfmiddlewaretoken" value="07uzh8snvXCIE1fcWzzopim4WRQITrdqNMeMbdMytxV2B7epAqObjE9fUSnl1vYD">
+		
+			<label for="email">email</label>
+			<input type="text" name="email" placeholder="Email">
+
+			<label for="password">password</label>
+			<input type="password" name="password" placeholder="Password">
+
+			<label for="confirm_password">confirm password</label>
+			<input type="password" name="confirm_password" placeholder="Confirm_Password">
+
+			<label for="pseudo">pseudo</label>
+			<input type="text" name="pseudo" placeholder="Pseudo">
+
+			<label for="avatar" class="avatar">Select avatar</label>
+			<input id="avatar" style="visibility:hidden;" type="file" name="avatar">
+		
+			<input type="submit" value="SIGN UP">
+		</form>
+	
+		<p>Already registered ?<br>Log in <a href="/signin">here</a></p>
+	</section>
+
+
+
+
+
+DEBUG 2024-07-15 20:40:05,639 views email avant parsing = lulu@lulu.com
+INFO 2024-07-15 20:40:05,640 views oui oui
+DEBUG 2024-07-15 20:40:05,640 views email_part = lulu
+DEBUG 2024-07-15 20:40:05,640 views domain_part = lulu.com
+DEBUG 2024-07-15 20:40:05,640 views email apres parsing = lulu@lulu.com
+DEBUG 2024-07-15 20:40:05,641 views pseudo = lulu
+DEBUG 2024-07-15 20:40:05,641 views password = luul
+DEBUG 2024-07-15 20:40:05,641 views confirm_password = luul
+DEBUG 2024-07-15 20:40:08,622 views html in sigin =     
+    
+    <link href="/static/pong/css/signup.css" rel="stylesheet">
+    
+
+    <h1 class="text-center">Pong</h1>
+    <section class="login">
+        <form action="/signin" method="post">
+            <input type="hidden" name="csrfmiddlewaretoken" value="k7zBkSX1tz5MD5HAlUgZzDTgWF2FDexA7MjOeXhcr9o6AbGNZLvMtZGrUGziLiiN">
+        
+            <label for="email">email</label>
+            <input type="text" name="email" placeholder="Email">
+        
+        
+            <label for="password">password</label>
+            <input type="password" name="password" placeholder="Password">
+        
+            <input type="submit" value="Log In">
+        </form>
+	    <p>New ?<br>Sign up <a href="/signup">here</a></p>
+
+    
+    </section>
+
+    
+
+
+INFO 2024-07-15 20:51:35,180 views html at ajax
+DEBUG 2024-07-15 20:51:35,182 views html in signup = 
+	
+	<link href="/static/pong/css/signup.css" rel="stylesheet">
+	<h1 class="text-center">CREATE YOUR ACCOUNT</h1>
+
+	<section>
+		<form action="/signup" method="post"  type="file" enctype="multipart/form-data" name="avatar">
+			<input type="hidden" name="csrfmiddlewaretoken" value="PqcMa0fYMtJIuw554u3G8AzuiW7KJLUdC5WZ45z9K322rC4iIlit2WmFgXEnRPFq">
+		
+			<label for="email">email</label>
+			<input type="text" name="email" placeholder="Email">
+
+			<label for="password">password</label>
+			<input type="password" name="password" placeholder="Password">
+
+			<label for="confirm_password">confirm password</label>
+			<input type="password" name="confirm_password" placeholder="Confirm_Password">
+
+			<label for="pseudo">pseudo</label>
+			<input type="text" name="pseudo" placeholder="Pseudo">
+
+			<label for="avatar" class="avatar">Select avatar</label>
+			<input id="avatar" style="visibility:hidden;" type="file" name="avatar">
+		
+			<input type="submit" value="SIGN UP">
+		</form>
+	
+		<p>Already registered ?<br>Log in <a href="/signin">here</a></p>
+	</section>
+
+
+
+
+
+DEBUG 2024-07-15 20:51:47,543 views email avant parsing = lulu@lulu.com
+INFO 2024-07-15 20:51:47,543 views oui oui
+DEBUG 2024-07-15 20:51:47,543 views email_part = lulu
+DEBUG 2024-07-15 20:51:47,545 views domain_part = lulu.com
+DEBUG 2024-07-15 20:51:47,545 views email apres parsing = lulu@lulu.com
+DEBUG 2024-07-15 20:51:47,546 views pseudo = luul
+DEBUG 2024-07-15 20:51:47,546 views password = lulu
+DEBUG 2024-07-15 20:51:47,546 views confirm_password = luul
+DEBUG 2024-07-15 20:51:50,293 views html in sigin =     
+    
+    <link href="/static/pong/css/signup.css" rel="stylesheet">
+    
+
+    <h1 class="text-center">Pong</h1>
+    <section class="login">
+        <form action="/signin" method="post">
+            <input type="hidden" name="csrfmiddlewaretoken" value="lgIHKKJSDiw5BEnBtMkhhfSJWGGtxXuP8VsUEP33BSPpyKmO7Dz4bBFUUHd6F1f2">
+        
+            <label for="email">email</label>
+            <input type="text" name="email" placeholder="Email">
+        
+        
+            <label for="password">password</label>
+            <input type="password" name="password" placeholder="Password">
+        
+            <input type="submit" value="Log In">
+        </form>
+	    <p>New ?<br>Sign up <a href="/signup">here</a></p>
+
+    
+    </section>
+
+    
+
+
+INFO 2024-07-15 20:53:15,427 views html at ajax
+DEBUG 2024-07-15 20:53:15,428 views html in signup = 
+	
+	<link href="/static/pong/css/signup.css" rel="stylesheet">
+	<h1 class="text-center">CREATE YOUR ACCOUNT</h1>
+
+	<section>
+		<form action="/signup" method="post"  type="file" enctype="multipart/form-data" name="avatar">
+			<input type="hidden" name="csrfmiddlewaretoken" value="dwPa1mkO2kaMOTb2i1rLenYqncI0MRuK0bznVrEZ0Ut6LZafWSGy8JLBldfDUVfX">
+		
+			<label for="email">email</label>
+			<input type="text" name="email" placeholder="Email">
+
+			<label for="password">password</label>
+			<input type="password" name="password" placeholder="Password">
+
+			<label for="confirm_password">confirm password</label>
+			<input type="password" name="confirm_password" placeholder="Confirm_Password">
+
+			<label for="pseudo">pseudo</label>
+			<input type="text" name="pseudo" placeholder="Pseudo">
+
+			<label for="avatar" class="avatar">Select avatar</label>
+			<input id="avatar" style="visibility:hidden;" type="file" name="avatar">
+		
+			<input type="submit" value="SIGN UP">
+		</form>
+	
+		<p>Already registered ?<br>Log in <a href="/signin">here</a></p>
+	</section>
+
+
+
+
+
+DEBUG 2024-07-15 20:53:24,787 views email avant parsing = lulu@lulu.com
+INFO 2024-07-15 20:53:24,788 views oui oui
+DEBUG 2024-07-15 20:53:24,788 views email_part = lulu
+DEBUG 2024-07-15 20:53:24,788 views domain_part = lulu.com
+DEBUG 2024-07-15 20:53:24,788 views email apres parsing = lulu@lulu.com
+DEBUG 2024-07-15 20:53:24,788 views pseudo = lulu
+DEBUG 2024-07-15 20:53:24,788 views password = lulu
+DEBUG 2024-07-15 20:53:24,788 views confirm_password = luul
+DEBUG 2024-07-15 20:53:27,916 views email avant parsing = 
+DEBUG 2024-07-15 20:53:27,916 views email apres parsing = 
+DEBUG 2024-07-15 20:53:27,916 views pseudo = 
+DEBUG 2024-07-15 20:53:27,916 views password = 
+DEBUG 2024-07-15 20:53:27,916 views confirm_password = 
+DEBUG 2024-07-15 20:53:30,162 views html in sigin =     
+    
+    <link href="/static/pong/css/signup.css" rel="stylesheet">
+    
+
+    <h1 class="text-center">Pong</h1>
+    <section class="login">
+        <form action="/signin" method="post">
+            <input type="hidden" name="csrfmiddlewaretoken" value="COhue9yqBGe7wsWuV130Gdux8mWv9MQYpt1H8eSBzgxrtyVHzSiNAzhI6nt8hQBb">
+        
+            <label for="email">email</label>
+            <input type="text" name="email" placeholder="Email">
+        
+        
+            <label for="password">password</label>
+            <input type="password" name="password" placeholder="Password">
+        
+            <input type="submit" value="Log In">
+        </form>
+	    <p>New ?<br>Sign up <a href="/signup">here</a></p>
+
+    
+    </section>
+
+    
+
+
+INFO 2024-07-15 20:54:38,870 views html at ajax
+DEBUG 2024-07-15 20:54:38,883 views html in signup = 
+	
+	<link href="/static/pong/css/signup.css" rel="stylesheet">
+	<h1 class="text-center">CREATE YOUR ACCOUNT</h1>
+
+	<section>
+		<form action="/signup" method="post"  type="file" enctype="multipart/form-data" name="avatar">
+			<input type="hidden" name="csrfmiddlewaretoken" value="iZiDN0wmCstjH8RG11UlzKFv4pSUiI7E5E2QH5QxA2MDEeQTFS98t6sG2qpxqMSR">
+		
+			<label for="email">email</label>
+			<input type="text" name="email" placeholder="Email">
+
+			<label for="password">password</label>
+			<input type="password" name="password" placeholder="Password">
+
+			<label for="confirm_password">confirm password</label>
+			<input type="password" name="confirm_password" placeholder="Confirm_Password">
+
+			<label for="pseudo">pseudo</label>
+			<input type="text" name="pseudo" placeholder="Pseudo">
+
+			<label for="avatar" class="avatar">Select avatar</label>
+			<input id="avatar" style="visibility:hidden;" type="file" name="avatar">
+		
+			<input type="submit" value="SIGN UP">
+		</form>
+	
+		<p>Already registered ?<br>Log in <a href="/signin">here</a></p>
+	</section>
+
+
+
+
+
+DEBUG 2024-07-15 20:55:00,965 views email avant parsing = lolo@lolo.com
+INFO 2024-07-15 20:55:00,966 views oui oui
+DEBUG 2024-07-15 20:55:00,967 views email_part = lolo
+DEBUG 2024-07-15 20:55:00,967 views domain_part = lolo.com
+DEBUG 2024-07-15 20:55:00,967 views email apres parsing = lolo@lolo.com
+DEBUG 2024-07-15 20:55:00,968 views pseudo = lolo
+DEBUG 2024-07-15 20:55:00,969 views password = lool
+DEBUG 2024-07-15 20:55:00,969 views confirm_password = lolo
+DEBUG 2024-07-15 20:55:02,780 views html in sigin =     
+    
+    <link href="/static/pong/css/signup.css" rel="stylesheet">
+    
+
+    <h1 class="text-center">Pong</h1>
+    <section class="login">
+        <form action="/signin" method="post">
+            <input type="hidden" name="csrfmiddlewaretoken" value="7LoQOWlfWelxnYlCWwI0CWD2vRYog7I3Uq83I1FqUOERk4kPAnXNwiqdtSv1obtg">
+        
+            <label for="email">email</label>
+            <input type="text" name="email" placeholder="Email">
+        
+        
+            <label for="password">password</label>
+            <input type="password" name="password" placeholder="Password">
+        
+            <input type="submit" value="Log In">
+        </form>
+	    <p>New ?<br>Sign up <a href="/signup">here</a></p>
+
+    
+    </section>
+
+    
+
+
+INFO 2024-07-15 20:55:12,751 views l'utilisateur est null
+INFO 2024-07-15 20:56:29,134 views l'utilisateur est null
+INFO 2024-07-15 20:59:19,199 views html at ajax
+DEBUG 2024-07-15 20:59:19,200 views html in signup = 
+	
+	<link href="/static/pong/css/signup.css" rel="stylesheet">
+	<h1 class="text-center">CREATE YOUR ACCOUNT</h1>
+
+	<section>
+		<form action="/signup" method="post"  type="file" enctype="multipart/form-data" name="avatar">
+			<input type="hidden" name="csrfmiddlewaretoken" value="kt48Ox7fhPpCl0AV0pA0AYXaLkZ9diyC78OlICrqfpIWi6z8EgPNukKlJlwMlmjP">
+		
+			<label for="email">email</label>
+			<input type="text" name="email" placeholder="Email">
+
+			<label for="password">password</label>
+			<input type="password" name="password" placeholder="Password">
+
+			<label for="confirm_password">confirm password</label>
+			<input type="password" name="confirm_password" placeholder="Confirm_Password">
+
+			<label for="pseudo">pseudo</label>
+			<input type="text" name="pseudo" placeholder="Pseudo">
+
+			<label for="avatar" class="avatar">Select avatar</label>
+			<input id="avatar" style="visibility:hidden;" type="file" name="avatar">
+		
+			<input type="submit" value="SIGN UP">
+		</form>
+	
+		<p>Already registered ?<br>Log in <a href="/signin">here</a></p>
+	</section>
+	
+
+
+
+
+
+DEBUG 2024-07-15 20:59:33,746 views email avant parsing = lala@lala.com
+INFO 2024-07-15 20:59:33,746 views oui oui
+DEBUG 2024-07-15 20:59:33,746 views email_part = lala
+DEBUG 2024-07-15 20:59:33,746 views domain_part = lala.com
+DEBUG 2024-07-15 20:59:33,746 views email apres parsing = lala@lala.com
+DEBUG 2024-07-15 20:59:33,746 views pseudo = lala
+DEBUG 2024-07-15 20:59:33,746 views password = lala
+DEBUG 2024-07-15 20:59:33,747 views confirm_password = lala
+DEBUG 2024-07-15 20:59:36,894 views html in sigin =     
+    
+    <link href="/static/pong/css/signup.css" rel="stylesheet">
+    
+
+    <h1 class="text-center">Pong</h1>
+    <section class="login">
+        <form action="/signin" method="post">
+            <input type="hidden" name="csrfmiddlewaretoken" value="7CgHnZN2flXBD2s9VtWXRCulTU8HU78WUh0Uh47ddVgVA8rmzkbKLYhwRVFk2bT9">
+        
+            <label for="email">email</label>
+            <input type="text" name="email" placeholder="Email">
+        
+        
+            <label for="password">password</label>
+            <input type="password" name="password" placeholder="Password">
+        
+            <input type="submit" value="Log In">
+        </form>
+	    <p>New ?<br>Sign up <a href="/signup">here</a></p>
+
+    
+    </section>
+
+    
+
+
+INFO 2024-07-15 21:00:15,493 views On passe la ouai
+DEBUG 2024-07-15 21:00:15,501 views user = lala
+DEBUG 2024-07-15 21:00:15,502 views statistics = Statistics for lala - won parties : 0 - lose parties : 0 - won tournament : 0 - total time played : 0:00:00
+DEBUG 2024-07-15 21:00:15,504 views user stats = Statistics for lala - won parties : 0 - lose parties : 0 - won tournament : 0 - total time played : 0:00:00
+INFO 2024-07-15 21:00:17,256 views On passe la ouai
+DEBUG 2024-07-15 21:00:17,257 views user = lala
+DEBUG 2024-07-15 21:00:17,262 views statistics = Statistics for lala - won parties : 0 - lose parties : 0 - won tournament : 0 - total time played : 0:00:00
+DEBUG 2024-07-15 21:00:17,264 views user stats = Statistics for lala - won parties : 0 - lose parties : 0 - won tournament : 0 - total time played : 0:00:00
+DEBUG 2024-07-15 21:01:58,960 views user participants = lala

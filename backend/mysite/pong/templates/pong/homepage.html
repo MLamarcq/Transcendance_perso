@@ -1,22 +1,10 @@
 {% extends 'base.html' %}
 
-{% block title %}Pong - The better game to have fun{% endblock %}
+
+
+{% block title %}Pong - Homepage{% endblock %}
+
 
 {% block content %}
-	<div class="container-fluid">
-		<h1 class="text-center">PONG - Game</h1>
-		<ul class="list-inline">
-			<li>Element 1</li>
-			<li>Element 2</li>
-			<li>Element 3</li>
-			<li>Element 4</li>
-			<li>Element 5</li>
-		</ul>
-		<p>
-			Lorem ipsum dolor sit amet consectetur adipisicing elit. Magni nisi,
-			 velit sapiente quis, consequatur incidunt exercitationem aperiam, 
-			 sunt alias at corporis maiores doloribus delectus praesentium 
-			 laborum magnam eos ex. Magnam.
-		</p>
-	</div>
+	{% include 'homepage_content.html' %}
 {% endblock %}

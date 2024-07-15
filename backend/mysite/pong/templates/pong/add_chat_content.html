@@ -1,0 +1,16 @@
+{% load static %}
+
+<link href="{% static 'pong/css/add_chat.css' %}" rel="stylesheet">
+
+<h1>CREATE A NEW CHAT</h1>
+<section>
+	<h1>NEW CHAT NAME</h1>
+	<form acion="{% url 'add_chat' %}" method="post">
+		{% csrf_token %}
+		<input type="text" name="chat_name" placeholder="Pseudo">
+        <input type="submit" value="Confirmed">
+	</form>
+</section>
+{% if message.value %}
+	<p>{{ message.error_message }}</p>
+{% endif %}

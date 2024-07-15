@@ -1,0 +1,80 @@
+{% load static %}
+
+<link href="{% static 'pong/css/chat.css' %}" rel="stylesheet">
+<a href="{% url 'add_chat' %}" alt="ADD_CHAT">ADD CHAT</a>
+<a href="{% url 'join_chat' %}" alt="JOIN_CHAT">JOIN CHAT</a>
+<section>
+	<aside>
+		{% if chat_info.list_of_chats %}
+			<ul class="text-center">
+				{% for chats in chat_info.list_of_chats %}
+				<!-- <li class="clickable-element">Imrane</li>
+				<li class="clickable-element">Gael</li>
+				<li class="clickable-element">Cyril</li>
+				<li class="clickable-element">Mathieu</li> -->
+					<li><a href="{% url 'chat_room' chats.name %}">{{chats.name}}</a></li>
+				{% endfor %}
+			</ul>
+		{% endif %}
+	</aside>
+	<article>
+		<div class="chat"><!--
+		--><ul class="text-center">
+				<!-- <li class="moi">Coucou</li>
+				<li class="moi">Ca va ?</li>
+				<li class="toi">Hello bien et tout</li>
+				<li class="toi">*toi</li>
+				<li class="moi">yayayaya</li>
+				<li class="toi">Lorem ipsum dolor sit amet consectetur, adipisicing elit. Est aliquam voluptatem fugiat nam molestiae iste? Odit, praesentium sapiente quia, recusandae autem ducimus nihil fuga ullam minus placeat natus aut eius.</li>
+				<li class="toi">Lorem ipsum dolor sit amet consectetur, adipisicing elit. Est aliquam voluptatem fugiat nam molestiae iste? Odit, praesentium sapiente quia, recusandae autem ducimus nihil fuga ullam minus placeat natus aut eius.</li>
+				<li class="toi">Lorem ipsum dolor sit amet consectetur, adipisicing elit. Est aliquam voluptatem fugiat nam molestiae iste? Odit, praesentium sapiente quia, recusandae autem ducimus nihil fuga ullam minus placeat natus aut eius.</li>
+				<li class="toi">Lorem ipsum dolor sit amet consectetur, adipisicing elit. Est aliquam voluptatem fugiat nam molestiae iste? Odit, praesentium sapiente quia, recusandae autem ducimus nihil fuga ullam minus placeat natus aut eius.</li>
+				<li class="toi">Lorem ipsum dolor sit amet consectetur, adipisicing elit. Est aliquam voluptatem fugiat nam molestiae iste? Odit, praesentium sapiente quia, recusandae autem ducimus nihil fuga ullam minus placeat natus aut eius.</li> -->
+			</ul>
+		</div>
+		<div class="msg">
+			<form action="{% url 'chat_room' chat_name %}" method="post">
+				{% csrf_token %}
+				<input type="text" name="send_message" placeholder="Message">
+				<input type="submit" value="Send">
+			</form>
+		</div>
+	</article>
+</section>
+<script>
+	// document.addEventListener('DOMContentLoaded', (event) => {
+		var elements = document.querySelectorAll('.clickable-element');
+		elements.forEach(element => {
+			element.addEventListener('click', () => {
+				elements.forEach(el => el.classList.remove('gray-background'));
+				element.classList.add('gray-background');
+			});
+		});
+		var messageInfo = JSON.parse('{{ message_info|safe|escapejs }}');
+		console.log("message_info = ", messageInfo);
+		var channels = Array.from(document.querySelectorAll('aside ul li'));
+		channels.forEach( e => {
+			e.addEventListener('click', () => {
+				console.log("e = ", messageInfo[e.textContent]);
+				var chat = document.querySelector(".chat ul");
+				chat.innerHTML = "";
+				messageInfo[e.textContent].forEach((msg) => {
+					var li = document.createElement("li");
+					var a = document.createElement("a")
+					li.textContent = msg.message;
+					a.textContent = msg.sender;
+					if (msg.sender != document.querySelector('a[alt="Profil"] span').textContent)
+					{
+						li.setAttribute("class", "toi")
+					}
+					else
+					{
+						li.setAttribute("class", "moi")
+					}
+					chat.append(li);
+					chat.append(a);
+				})
+			})
+		})
+	// });
+</script>

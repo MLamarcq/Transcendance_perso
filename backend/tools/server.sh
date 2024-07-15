@@ -18,7 +18,12 @@ fi
 log "migration in progess.."
 
 sleep 1
-
+# pip3 install django_otp
+# pip3 install django-two-factor-auth
+# pip3 install django-two-factor-auth[phonenumberslite]
+pip3 install pyotp
+pip3 install qrcode
+pip3 install Pillow
 python3.12 manage.py makemigrations
 
 if [ $? -ne 0 ]; then

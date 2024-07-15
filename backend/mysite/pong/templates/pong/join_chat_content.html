@@ -1,0 +1,29 @@
+{% load static %}
+
+<link href="{% static 'pong/css/join_chat.css' %}" rel=stylesheet>
+
+<h1>JOIN A CHAT</h1>
+<section>
+	<h1>CHAT NAME</h1>
+	<form acion="{% url 'join_chat' %}" method="post">
+		{% csrf_token %}
+		<input type="text" name="chat_name" placeholder="Pseudo">
+		<input type="submit" value="Confirmed">
+	</form>
+</section>
+<section>
+	<h1>AVAILABLE CHAT</h1>
+	{% if chat_info.value %}
+		<ul>
+			{% for chat in chat_info.list_of_chats %}
+				<li>{{ chat.name }}</li>
+			{% endfor %}
+		</ul>
+	{% endif %}
+</section>
+{% if chat_info.error_message %}
+	<p>{{ chat_info.error_message }}</p>
+{% endif %}
+{% if chat_info.message %}
+	<p>{{ chat_info.message }}</p>
+{% endif %}

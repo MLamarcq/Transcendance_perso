@@ -81,7 +81,7 @@
 			chat.append(li);
 			chat.append(a);
 		})
-		var interval = setInterval(function () {
+		var displayChatInterval = setInterval(function () {
 			console.log(" --------- 1000ms ---------");
 			$.ajax({
 				url: '/render_chat/' + chatName,

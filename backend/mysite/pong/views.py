@@ -284,9 +284,11 @@ def signup(request):
 
 
 def handle_authentication(request, email, password):
+	logger.info("__ D")
 	user = authenticate(request, email=email, password=password)
 	print("email =", email, "password =", password)
 	if user is not None:
+		logger.info("__ E")
 		request.session['user_id'] = user.id
 		if user.is_mfa_enabled:
 			return {'redirect': "pong/otp_content.html",
@@ -298,11 +300,14 @@ def handle_authentication(request, email, password):
 					'url' : reverse("index")
 			}
 	else:
+		logger.info("__ F")
 		logger.info("l'utilisateur est null")
 		return {'error_message': "Invalid credentials."}
 
 def signin(request):
+	logger.info("__ A")
 	if request.user.is_authenticated:
+		logger.info("__ B")
 		message = "Vous êtes déjà connecté"
 		if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
 			html = render_to_string("pong/homepage_content.html", {'message': message}, request=request)
@@ -314,12 +319,14 @@ def signin(request):
 			return HttpResponseRedirect(reverse("index"))
 
 	if request.method == "POST":
-		print("Je passe ici quand j'appuie sur LOGIN oui")
+		logger.info("__ C")
 		email = request.POST.get("email")
 		password = request.POST.get("password")
 		
 		result = handle_authentication(request, email, password)
-		
+		logger.debug("email = %s", email)
+		logger.debug("password = %s", password)
+
 		if 'error_message' in result:
 			if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
 				html = render_to_string("pong/signin_content.html", {'error_message': True, 'message': result['error_message']}, request=request)
@@ -709,13 +716,22 @@ def chat_room(request, chat_name):
 	else :
 		for chat in reversed(list_of_chats) :
 			if (chat.name == chat_name) :
+				toggle = True
 				messages = chat.messages.all()
 				message_info[chat.name] = []
 				for message in messages :
-					message_info[chat.name].append({
-						'message' : message.content,
-						'sender' : message.sender.pseudo,
-						'time' : message.timestamp.isoformat(),
+					blocked_object = BlockedUser.objects.all()
+					blocked_list = []
+					if blocked_object :
+						for blocked in blocked_object :
+							if user.pseudo == blocked.blocker.pseudo :
+								if message.sender == blocked.blocked.pseudo :
+									toggle = False
+					if toggle :
+						message_info[chat.name].append({
+							'message' : message.content,
+							'sender' : message.sender.pseudo,
+							'time' : message.timestamp.isoformat(),
 					})
 				break
 			# context = {'chat_info' : chat_info,
@@ -882,9 +898,9 @@ def add_chat(request) :
 																		'error_message' : error_message},
 																		'add_chat_info' : add_chat_info})
 			chat, created = Chat.objects.get_or_create(name=chat_name)
-			# chat.save()
 			user_participant, created = Participant.objects.get_or_create(user=user, chat=chat)
-			# user_participant.save()
+			chat.save()
+			user_participant.save()
 			error_message = f"Chat {chat_name} was created successfully"
 			if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
 					html = render_to_string("pong/add_chat_content.html", {'message': {
@@ -916,10 +932,13 @@ def add_chat(request) :
 					error_message = is_blocked(friend_name, add_chat_info['blocked_users'])
 					if not error_message :
 						error_message = "Tous les filtres ont ete passes"
-						chat_private, created = Chat.objects.get_or_create(name=friend_name, is_private=True)
-						# chat_private.save()
-						participant1, created = Participant.objects.get_or_created(user=user, chat=chat_private)
-						participant2, created = Participant.objects.get_or_created(user=other_user, chat=chat_private)
+						chat_name = other_user.pseudo + " et " + user.pseudo
+						chat_private, created = Chat.objects.get_or_create(name=chat_name, is_private=True)
+						participant1, created = Participant.objects.get_or_create(user=user, chat=chat_private)
+						participant2, created = Participant.objects.get_or_create(user=other_user, chat=chat_private)
+						chat_private.save()
+						participant1.save()
+						participant2.save()
 						error_message =  f"You are noz in private conversation with {other_user.pseudo}"
 			if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
 					html = render_to_string("pong/add_chat_content.html", {'message': {
@@ -1047,7 +1066,7 @@ def render_chat(request, chat_name) :
 					'sender' : message.sender.pseudo,
 					'time' : message.timestamp.isoformat(),
 				})
-			logger.debug("message_chat = %s", message_chat)
+			# logger.debug("message_chat = %s", message_chat)
 			return JsonResponse({
 				'chat_found' : True,
 				'update_message' : update_message

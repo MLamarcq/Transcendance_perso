@@ -94,7 +94,7 @@ ASGI_APPLICATION = "pong.asgi.application"
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
-env_path = Path('/home/gael/mael_transcendance/.env')
+env_path = Path('/home/sgoinfre/PONG/.env')
 
 
 # Charger les variables d'environnement à partir du fichier .env
@@ -170,6 +170,13 @@ print("Statifile dir =", STATICFILES_DIRS)
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+
+CSRF_TRUSTED_ORIGINS = [
+    'https://localhost:9443',
+    'https://127.0.0.1:9443',
+    'https://pong.fr'
+]
 
 
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')

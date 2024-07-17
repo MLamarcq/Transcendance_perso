@@ -2,27 +2,24 @@ USERNAME :=$(shell whoami)
 VOLUME := $(sudo docker volume ls -q)
 
 all:
-	sudo docker-compose -f docker-compose.yml build --no-cache;
-	sudo docker-compose -f docker-compose.yml up -d;
+	docker-compose -f docker-compose.yml build --no-cache;
+	docker-compose -f docker-compose.yml up -d;
 
 logs:
-	sudo docker logs backend
-	sudo docker logs database
+	docker logs backend
+	docker logs database
 
 clean:
-	sudo docker container stop database
-	sudo docker container stop backend
-	sudo docker container stop nginx
-	sudo docker network rm transcendance
-	# sudo docker volume rm $(VOLUME)
+	docker container stop database
+	docker container stop backend
+	docker container stop nginx
+	docker network rm transcendance
+	# docker volume rm $(VOLUME)
 
 fclean: clean
-	sudo rm -rf /home/gael/Desktop/data/database/*
-	sudo rm -rf /home/gael/Desktop/data/backend/*
-	sudo docker rm database
-	sudo docker rm backend
-	# sudo docker-compose down -v
-	sudo docker system prune -af
+	docker rm database
+	docker rm backend
+	docker system prune -af
 
 re: fclean all
 

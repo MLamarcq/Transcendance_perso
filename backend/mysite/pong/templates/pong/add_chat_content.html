@@ -3,14 +3,60 @@
 <link href="{% static 'pong/css/add_chat.css' %}" rel="stylesheet">
 
 <h1>CREATE A NEW CHAT</h1>
-<section>
-	<h1>NEW CHAT NAME</h1>
-	<form acion="{% url 'add_chat' %}" method="post">
-		{% csrf_token %}
-		<input type="text" name="chat_name" placeholder="Pseudo">
-        <input type="submit" value="Confirmed">
-	</form>
-</section>
-{% if message.value %}
-	<p>{{ message.error_message }}</p>
+{% if not add_chat_info.token %}
+	<div class="no_private">
+		<section>
+			<h1>NEW CHAT NAME</h1>
+			<form acion="{% url 'add_chat' %}" method="post">
+				{% csrf_token %}
+				<input type="text" name="chat_name" placeholder="Pseudo">
+				<input type="submit" value="Confirmed">
+			</form>
+		</section>
+		{% if message.value %}
+			<p>{{ message.error_message }}</p>
+		{% endif %}
+	</div>
+{% else %}
+	<div class="private">
+		<section>
+			<h1>NEW CHAT NAME</h1>
+			<form acion="{% url 'add_chat' %}" method="post">
+				{% csrf_token %}
+				<input type="text" name="chat_name" placeholder="Pseudo">
+				<input type="submit" value="Confirmed">
+			</form>
+		</section>
+		<section>
+			<h1>CREATE A PRIVATE DISCUSSION</h1>
+			<form acion="{% url 'add_chat' %}" method="post">
+				{% csrf_token %}
+				<input type="text" name="private_chat" placeholder="Pseudo">
+				<input type="submit" value="Confirmed">
+			</form>
+			<h1>FRIENDS</h1>
+			{% if add_chat_info.users_ok %}
+				<ul>
+					{% for users in add_chat_info.users_ok %}
+						<li>{{users.pseudo}}</li>
+					{% endfor %}
+				</ul>
+			{% else %}
+				<p>NO USERS AVALAIBLE</p>
+			{% endif %}
+			<h1>BLOCKED FRIENDS</h1>
+			{% if add_chat_info.blocked_users %}
+				<ul>
+					{% for users in add_chat_info.blocked_users %}
+						<li>{{users.pseudo}}</li>
+					{% endfor %}
+				</ul>
+			{% else %}
+				<p>NO FRIEND BLOCKED</p>
+			{% endif %}
+		</section>
+	</div>
+	{% if message.value %}
+		<p>{{ message.error_message }}</p>
+	{% endif %}
 {% endif %}

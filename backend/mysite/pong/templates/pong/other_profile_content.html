@@ -1,0 +1,100 @@
+{% load static %}
+
+<link href="{% static 'pong/css/other_profile.css' %}" rel=stylesheet>
+
+{% if user_target.token %}
+	<h1>{{ user_target.username }}'S PROFIL</h1>
+	<section>
+		<div class="user_info">
+			<div class="avatar">
+				{% if user_target.user_avatar %}
+				<img src="{{ user_target.user_avatar }}" alt="Avatar" />
+				{% else %}
+					<img src="{% static 'pong/image/profil_default.png' %}" alt="Default Avatar" />
+				{% endif %}
+			</div>
+			<div class="user_">
+				<h1>PSEUDO</h1>
+				<p>{{ user_target.username }}</p>
+				<h1>FRIEND</h1>
+				{% if user_target.is_friend %}
+					<p class="is_friend">YES</p>
+				{% else %}
+					<p class="is_not_friend">NO</p>
+				{% endif %}
+			</div>
+		</div>
+		<div class="user_stat">
+			<ul>
+				{% if user_target.statistics %}
+					<h3>Game Won</h3>
+					<li>{{ user_target.statistics.nbr_won_parties }}</li>
+					
+					<h3>Game Lost</h3>
+					<li>{{ user_target.statistics.nbr_lose_parties }}</li>
+					
+					<h3>Time played</h3>
+					<li>{{ user_target.statistics.total_time_played }}</li>
+
+					<h3>Won Tournament</h3>
+					<li>{{ user_target.statistics.nbr_won_tournaments }}</li>
+				{% else %}
+					<h3>Game Won</h3>
+					<li>0</li>
+					
+					<h3>Game Lost</h3>
+					<li>0</li>
+					
+					<h3>Time played</h3>
+					<li>0</li>
+					
+					<h3>Won Tournament</h3>
+					<li>0</li>
+				{% endif %}
+			</ul>
+		</div>
+	</section>
+	<section class="right_board">
+		<div class="table-container">
+			<h1>HISTORY</h1>
+			<!-- <ul>
+				<li>Match 1</li>
+			</ul> -->
+			<table>
+				<thead>
+					<tr>
+						<th>Date</th>
+						<th>Opponent</th>
+						<th>Result</th>
+						<!-- <th>Game Duration</th> -->
+					</tr>
+				</thead>
+			</table>
+		</div>
+		<div class="tbody-container">
+			<table>
+				<tbody>
+					{% for game in user_target.history %}
+						{% if game.winner.pseudo == user.pseudo %}
+							<tr>
+								<td class="victory">{{game.date}}</td>
+								<td class="victory">{{game.loser}}</td>
+								<td class="victory">Victory</td>
+							</tr>
+						{% else %}
+							<tr>
+								<td class="defeat">{{game.date}}</td>
+								<td class="defeat">{{game.winner}}</td>
+								<td class="defeat">Defeat</td>
+							</tr>
+						{% endif %}
+					{% empty %}
+						<tr class="empty">
+							<td colspan="3" class="empty-cell">No match played yet</td>
+						</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+		</div>
+	</section>
+{% endif %}

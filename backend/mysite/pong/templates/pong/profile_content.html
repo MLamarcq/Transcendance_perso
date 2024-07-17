@@ -167,7 +167,7 @@
  
 <script>
 	console.log("J'aime les fraises");
-	let submit = document.querySelector('.right_side input[type="submit"]');
+	var submit = document.querySelector('.right_side input[type="submit"]');
 	submit.addEventListener('click', (e) => {
 		e.preventDefault();
 		e.target.form.querySelector('input[type="checkbox"]').checked = true;

@@ -35,12 +35,16 @@
 		<div class="msg">
 			<form action="{% url 'chat_room' chat_name %}" method="post">
 				{% csrf_token %}
-				<input type="text" name="send_message" placeholder="Message">
+				<input type="text" name="message_content" placeholder="Message">
 				<input type="submit" value="Send">
 			</form>
 		</div>
 	</article>
 </section>
+<script>
+	// Définir une URL de base avec un espace réservé
+	var oterhProfileUrlBase = "{% url 'other_profile' 'SENDER_PLACEHOLDER' %}";
+</script>
 <script>
 	// document.addEventListener('DOMContentLoaded', (event) => {
 		var elements = document.querySelectorAll('.clickable-element');
@@ -51,30 +55,80 @@
 			});
 		});
 		var messageInfo = JSON.parse('{{ message_info|safe|escapejs }}');
+		var chatName = JSON.parse('{{ chat_name_json|safe|escapejs }}');
 		console.log("message_info = ", messageInfo);
-		var channels = Array.from(document.querySelectorAll('aside ul li'));
-		channels.forEach( e => {
-			e.addEventListener('click', () => {
-				console.log("e = ", messageInfo[e.textContent]);
-				var chat = document.querySelector(".chat ul");
-				chat.innerHTML = "";
-				messageInfo[e.textContent].forEach((msg) => {
-					var li = document.createElement("li");
-					var a = document.createElement("a")
-					li.textContent = msg.message;
-					a.textContent = msg.sender;
-					if (msg.sender != document.querySelector('a[alt="Profil"] span').textContent)
-					{
-						li.setAttribute("class", "toi")
-					}
-					else
-					{
-						li.setAttribute("class", "moi")
-					}
-					chat.append(li);
-					chat.append(a);
-				})
-			})
+		console.log("chat name = ", chatName)
+		chatName = chatName["chat_name"]
+		// var channels = Array.from(document.querySelectorAll('aside ul li'));
+		// channels.forEach( e => {
+		// 	e.addEventListener('click', () => {
+		// 		console.log("e = ", messageInfo[e.textContent]);
+		var chat = document.querySelector(".chat ul");
+		chat.innerHTML = "";
+		messageInfo[chatName].forEach((msg) => {
+			var li = document.createElement("li");
+			var a = document.createElement("a")
+			li.textContent = msg.message;
+			a.textContent = msg.sender;
+			if (msg.sender != document.querySelector('a[alt="Profil"] span').textContent)
+			{
+				li.setAttribute("class", "toi")
+			}
+			else
+			{
+				li.setAttribute("class", "moi")
+			}
+			chat.append(li);
+			chat.append(a);
 		})
+		var interval = setInterval(function () {
+			console.log(" --------- 1000ms ---------");
+			$.ajax({
+				url: '/render_chat/' + chatName,
+				success: function(receive_data)
+				{
+					console.log("receive_data = ", receive_data)
+					if (receive_data['chat_found'])
+					{
+						// var messageUpdate = JSON.parse('{{ update_message|safe|escapejs }}')
+						// console.log("messageUpdate = ", messageUpdate)
+						chat.innerHTML = "";
+						// console.log("receive_data['update_message'] =", receive_data['update_message']);
+						// console.log("receive_data['update_message'].chatName = ", JSON.parse(receive_data['update_message'].chatName))
+						
+						receive_data['update_message'][chatName].forEach((msg) => {
+							var li = document.createElement("li");
+							var a = document.createElement("a")
+							li.textContent = msg.message;
+							a.textContent = msg.sender;
+							if (msg.sender != document.querySelector('a[alt="Profil"] span').textContent)
+							{
+								li.setAttribute("class", "toi")
+							}
+							else
+							{
+								li.setAttribute("class", "moi")
+							}
+							// var goodUrl = temp.slice(0, 2) + urlTemp + temp.slice(2)
+							// console.log("urlTemp = ", urlTemp)
+							// console.log("goodUrl = ", goodUrl)
+							// a.setAttribute("href", "{% url 'oterh_profile' msg.sender }")
+							var profileUrl = oterhProfileUrlBase.replace('SENDER_PLACEHOLDER', encodeURIComponent(msg.sender));
+							// if (profileUrl.charAt(0) == "/")
+							// {
+							// 	profileUrl = profileUrl.substring(1)
+							// }
+							console.log("profileUrl = ", profileUrl, "encodeURIComponent(msg.sender) = ", encodeURIComponent(msg.sender))
+							a.setAttribute("href", profileUrl)
+							console.log("a = ", a)
+							chat.append(li);
+							chat.append(a);
+						})
+					}
+				}
+			})
+		}, 3000)
+		// 	})
+		// })
 	// });
 </script>

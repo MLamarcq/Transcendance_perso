@@ -459,22 +459,25 @@ def otp_view(request):
 	#                                                 'game_duration_json' : json.dumps(data)
 	#                                                 })
 
-def statistics(request):
-	if not request.user.is_authenticated:
-		if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
-			html = render_to_string("pong/login_content.html", {'message': message}, request=request)
-			return JsonResponse({'html': html,
-								'url' : reverse("index")
-			})
-		else:
-			return HttpResponseRedirect(reverse("index"))
-	user = NewUser.objects.get(id=(request.session.get('user_id')))
-	if not user.statistic :
-		logger.info("On passe la ouai")
-		user_statistic, created = Statistic.objects.get_or_create(user=user)
+
+def update_stats(user) :
+	user_statistic = None
+	# if not user.statistic:
+	data = {
+		'history' : [],
+		'user_statistic' : None,
+		'game_dates_json': [],
+		'game_results_json': [],
+		'game_duration_json' : {},
+	}
+	logger.info("On passe la ouai")
+	user_statistic, created = Statistic.objects.get_or_create(user=user)
+	if created:
+		user.statistic = user_statistic
+		user.save()
 		# user_statistic.nbr_won_parties += 1
 	logger.debug("user = %s", user)
-	logger.debug("statistics = %s", user_statistic)
+	logger.debug("statistics = %s", user.statistic)
 	history = []
 	partie = Party.objects.all()
 	user_here = 0
@@ -486,18 +489,20 @@ def statistics(request):
 			user_here += 1
 			user.nbr_parties = user_here
 			logger.info("C'est ici que ca se passe")
-			if user_statistic :
-				if user.nbr_parties > (user_statistic.nbr_won_parties + user_statistic.nbr_lose_parties) :
-					if user.pseudo == winner :
-						logger.info("C'est ici que ca se passe")
-						logger.debug(" nbr victoires avant = %d", user_statistic.nbr_won_parties)
-						user_statistic.nbr_won_parties += 1
-						logger.debug(" nbr victoires apres = %d", user_statistic.nbr_won_parties)
-					else :
-						user_statistic.nbr_lose_parties += 1
-					if game.tournament and game.tournament.name :
-						user_statistic.nbr_won_tournaments += 1
-					user_statistic.save()
+	data['history'] = history
+	if user_statistic :
+		if user.nbr_parties > (user_statistic.nbr_won_parties + user_statistic.nbr_lose_parties) :
+			if user.pseudo == winner :
+				logger.info("C'est ici que ca se passe")
+				logger.debug(" nbr victoires avant = %d", user_statistic.nbr_won_parties)
+				user_statistic.nbr_won_parties += 1
+				logger.debug(" nbr victoires apres = %d", user_statistic.nbr_won_parties)
+			else :
+				user_statistic.nbr_lose_parties += 1
+			if game.tournament and game.tournament.name :
+				user_statistic.nbr_won_tournaments += 1
+			logger.info("J'arrive jusque la")
+			user_statistic.save()
 		# if user.pseudo == winner:
 		# 	if user.statistic:
 		# 		user.statistic.nbr_won_parties += 1
@@ -526,27 +531,50 @@ def statistics(request):
 			game_result_numeric.append(1)
 		else :
 			game_result_numeric.append(-1)
-	nbr_day = 1
-	for i in range(1, len(game_date)):
-		if game_date[i] != game_date[i - 1]:
-			nbr_day += 1
-	data = {}
+	# nbr_day = 1
+	# for i in range(1, len(game_date)):
+	# 	if game_date[i] != game_date[i - 1]:
+	# 		nbr_day += 1
+	days_of_playing = {}
 	game_duration = timedelta()
+	user_statistic.total_time_played = timedelta(0)
 	for i in range(len(history)):
 		game_duration += history[i].game_time
 		if user_statistic :
+			logger.info("Ici oui")
+			logger.debug("time = %s", history[i].game_time)
 			user_statistic.total_time_played += history[i].game_time
+			logger.debug("time 2 = %s", user_statistic.total_time_played)
+			
 		if ((i == len(history) - 1) or (history[i].date.strftime('%Y-%m-%d') != history[i + 1].date.strftime('%Y-%m-%d'))) :
-			data[history[i].date.strftime('%Y-%m-%d')] = game_duration.total_seconds()
+			days_of_playing[history[i].date.strftime('%Y-%m-%d')] = game_duration.total_seconds()
 			game_duration = timedelta()
+	user.statistic = user_statistic
+	user.save()
+	data['user_statistic'] = user_statistic
+	data['game_dates_json'] = json.dumps(game_date)
+	data['game_results_json'] = json.dumps(game_result_numeric)
+	data['game_duration_json'] = json.dumps(days_of_playing)
+	logger.debug("data = %s", data)
+	return (data)
+
+
+def statistics(request):
+	if not request.user.is_authenticated:
+		if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+			html = render_to_string("pong/login_content.html", {'message': message}, request=request)
+			return JsonResponse({'html': html,
+								'url' : reverse("index")
+			})
+		else:
+			return HttpResponseRedirect(reverse("index"))
+	user = NewUser.objects.get(id=(request.session.get('user_id')))
+	data = {}
+	data = update_stats(user)
 	if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
-			html = render_to_string("pong/statistics_content.html", {'user' : user,
-																	'statistics' : user_statistic,
-																	'history' : history,
-																	'game_dates_json': json.dumps(game_date),
-																	'game_results_json': json.dumps(game_result_numeric),
-																	'game_duration_json' : json.dumps(data),
-																	'css_file' : 'pong/css/statistics.css',
+			html = render_to_string("pong/statistics_content.html", {
+																		'user' : user,
+																		'data' : data
 																	}, request=request)
 			return JsonResponse({'html': html,
 								'url' : reverse("statistics")
@@ -554,12 +582,7 @@ def statistics(request):
 	else :
 		return render(request, "pong/statistics.html", {
 													'user' : user,
-													'statistics' : user_statistic,
-													'history' : history,
-													'game_dates_json': json.dumps(game_date),
-													'game_results_json': json.dumps(game_result_numeric),
-													'game_duration_json' : json.dumps(data),
-													'css_file' : 'pong/css/statistics.css',
+													'data' : data
 													})
 
 
@@ -614,6 +637,7 @@ def chat_solo(request):
 	context = {'chat_info' : chat_info,
 				'message_info' : json.dumps(message_info),
 				'chat_name' : name_chat,
+				'chat_name_json' : json.dumps({'chat_name' : name_chat}),
 	}
 	if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
 		html = render_to_string("pong/chat_content.html", context, request=request)
@@ -664,6 +688,7 @@ def chat_room(request, chat_name):
 	context = {'chat_info' : None,
 					'message_info' : None,
 					'chat_name' : None,
+					'chat_name_json' : None
 		}
 	if not chat_name :
 		for chat in reversed(list_of_chats) :
@@ -680,6 +705,7 @@ def chat_room(request, chat_name):
 		context['chat_info'] = chat_info
 		context['message_info'] = json.dumps(message_info)
 		context['chat_name'] = name_chat
+		context['chat_name_json'] = json.dumps({'chat_name' : name_chat})
 	else :
 		for chat in reversed(list_of_chats) :
 			if (chat.name == chat_name) :
@@ -699,9 +725,10 @@ def chat_room(request, chat_name):
 		context['chat_info'] = chat_info
 		context['message_info'] = json.dumps(message_info)
 		context['chat_name'] = chat_name
+		context['chat_name_json'] = json.dumps({'chat_name' : chat_name})
 	if request.method == "POST" : 
-		send_message = request.POST.get("send_message")
-		logger.debug("send_message = %s", send_message)
+		message_content = request.POST.get("message_content")
+		logger.debug("message_content = %s", message_content)
 		logger.debug("context = %s", context)
 		# chat_id = request.POST.get('chat_id')
 		# logger.debug("chat_id = %s", chat_id)
@@ -712,6 +739,12 @@ def chat_room(request, chat_name):
 			chat_name_url = chat_name
 		else: 
 			chat_name_url = name_chat
+		chat_object = Chat.objects.get(name=chat_name_url)
+		logger.debug("chat_objet = %s", chat_object)
+		message_object = Message.objects.create(sender=user, content=message_content)
+		message_object.save()
+		send_message(chat_object, message_object)
+		chat_object.save()
 		if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
 			html = render_to_string("pong/chat_content.html", context, request=request)
 			return JsonResponse({'html': html,
@@ -731,6 +764,80 @@ def chat_room(request, chat_name):
 				})
 		return render(request, "pong/chat.html", context)
 
+
+def check_private_possibility(user) :
+	user_friends = get_friends(user)
+	info_add_chat = {
+		'token' : None,
+		'users_ok' : [],
+		'blocked_users' : []
+	}
+	if not user_friends :
+		info_add_chat['token'] = False
+		return info_add_chat
+	blocked_object = BlockedUser.objects.all()
+	blocked_list = []
+	if blocked_object :
+		for blocked in blocked_object :
+			if user.pseudo == blocked.blocker.pseudo :
+				for friend in user_friends :
+					if friend.pseudo == blocked.blocked_user.pseudo :
+						blocked_list.append(friend)
+		for friend in user_friends :
+			toggle = False
+			for users_blocked in blocked_list : 
+				if friend.pseudo == users_blocked.pseudo :
+					toggle = True
+					break
+			if not toggle :
+				info_add_chat['users_ok'].append(friend)
+		info_add_chat['blocked_users'] = blocked_list
+	else :
+		for friend in user_friends :
+			info_add_chat['users_ok'].append(friend)
+	# if info_add_chat['users_ok'] or info_add_chat:
+	info_add_chat['token'] = True
+	logger.debug("info_add_chat = %s", info_add_chat)
+	return (info_add_chat)
+
+def is_in_users(username) :
+	# error_message = None
+	toggle = False
+	all_users = NewUser.objects.all()
+	for user_solo in all_users : 
+		if username == user_solo.pseudo :
+			toggle = True
+			break
+	if not toggle :
+		return (None)
+	return user_solo
+
+def is_in_friends_list(username, friend_list) : 
+	toggle = False
+	error_message = None
+	for friend in friend_list : 
+		if friend.pseudo == username :
+			toggle = True
+			break
+	if not toggle : 
+		error_message = f"{username} is not your friend"
+	return (error_message)
+
+def is_blocked(username, blocked_list) :
+	toggle = False
+	error_message = None
+	for blocked in blocked_list : 
+		logger.debug("blocked.pseudo = %s", blocked.pseudo)
+		logger.debug("username = %s", username)
+		if blocked.pseudo == username :
+			toggle = True
+			break
+	if toggle :
+		error_message = f"{username} is blocked"
+	# logger.debug("blocked_list = %s", blocked_list)
+	# # if username in blocked_list :
+	return (error_message)
+
 def add_chat(request) :
 	if not request.user.is_authenticated:
 		if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
@@ -741,57 +848,100 @@ def add_chat(request) :
 		else:
 			return HttpResponseRedirect(reverse("index"))
 	user = NewUser.objects.get(id=(request.session.get('user_id')))
+	private_possibility = False
+	add_chat_info = check_private_possibility(user)
 	if request.method == "POST" :
-		logger.info("On passe ici")
-		chat_name = request.POST.get("chat_name")
-		logger.debug("chat_name = %s", chat_name)
-		chats = Chat.objects.all()
-		logger.debug("chats = %s", chats)
-		error_message = None
-		for chat in chats :
-			logger.debug("chat_name for = %s", chat_name)
-			logger.debug("chat.name = %s", chat.name)
-			if (chat_name == chat.name) :
-				logger.info("Je rentre dedans")
-				error_message = "Chat already exist. Please try with another one"
-				break
-		if (error_message) :
-			logger.info("Je rentre dans error_message")
-			logger.debug("error_message = %s", error_message)
+		if (request.POST.get("chat_name")) :
+			chat_name = request.POST.get("chat_name")
+			logger.debug("chat_name = %s", chat_name)
+			chats = Chat.objects.all()
+			logger.debug("chats = %s", chats)
+			error_message = None
+			for chat in chats :
+				logger.debug("chat_name for = %s", chat_name)
+				logger.debug("chat.name = %s", chat.name)
+				if (chat_name == chat.name) :
+					logger.info("Je rentre dedans")
+					error_message = "Chat already exist. Please try with another one"
+					break
+			if (error_message) :
+				logger.info("Je rentre dans error_message")
+				logger.debug("error_message = %s", error_message)
+				if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+					html = render_to_string("pong/add_chat_content.html", {'message': {
+																		'value' : True,
+																		'error_message' : error_message},
+																		'add_chat_info' : add_chat_info
+																		}, request=request)
+					return JsonResponse({'html': html,
+										'url' : reverse("add_chat")
+					})
+				else:
+					return render(request, "pong/add_chat.html", {'message': {
+																		'value' : True,
+																		'error_message' : error_message},
+																		'add_chat_info' : add_chat_info})
+			chat, created = Chat.objects.get_or_create(name=chat_name)
+			# chat.save()
+			user_participant, created = Participant.objects.get_or_create(user=user, chat=chat)
+			# user_participant.save()
+			error_message = f"Chat {chat_name} was created successfully"
 			if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
-				html = render_to_string("pong/add_chat_content.html", {'message': {
-																	'value' : True,
-																	'error_message' : error_message}}, request=request)
-				return JsonResponse({'html': html,
-									'url' : reverse("add_chat")
-				})
+					html = render_to_string("pong/add_chat_content.html", {'message': {
+																		'value' : True,
+																		'error_message' : error_message},
+																		'add_chat_info' : add_chat_info}, request=request)
+					return JsonResponse({'html': html,
+										'url' : reverse("add_chat")
+					})
 			else:
 				return render(request, "pong/add_chat.html", {'message': {
-																	'value' : True,
-																	'error_message' : error_message}})
-		chat, created = Chat.objects.get_or_create(name=chat_name)
-		user_participant, created = Participant.objects.get_or_create(user=user, chat=chat)
-		error_message = f"Chat {chat_name} was created successfully"
-		if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
-				html = render_to_string("pong/add_chat_content.html", {'message': {
-																	'value' : True,
-																	'error_message' : error_message}}, request=request)
-				return JsonResponse({'html': html,
-									'url' : reverse("add_chat")
-				})
-		else:
-			return render(request, "pong/add_chat.html", {'message': {
-																	'value' : True,
-																	'error_message' : error_message}})
+																		'value' : True,
+																		'error_message' : error_message},
+																		'add_chat_info' : add_chat_info})
+		if request.POST.get("private_chat") :
+			logger.info("On se retrouve bien ici")
+			friend_name = request.POST.get("private_chat")
+			logger.debug("friend_name = %s", friend_name)
+			logger.debug("friend_name = %s", type(friend_name))
+			error_message = None
+			other_user = is_in_users(friend_name)
+			if not other_user : 
+				error_message = f"{friend_name} suer doesn't exist"
+			if not error_message :
+				friend_list = get_friends(user)
+				logger.debug("friend_list = %s", friend_list)
+				error_message = is_in_friends_list(friend_name, friend_list)
+				if not error_message :
+					error_message = is_blocked(friend_name, add_chat_info['blocked_users'])
+					if not error_message :
+						error_message = "Tous les filtres ont ete passes"
+						chat_private, created = Chat.objects.get_or_create(name=friend_name, is_private=True)
+						# chat_private.save()
+						participant1, created = Participant.objects.get_or_created(user=user, chat=chat_private)
+						participant2, created = Participant.objects.get_or_created(user=other_user, chat=chat_private)
+						error_message =  f"You are noz in private conversation with {other_user.pseudo}"
+			if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+					html = render_to_string("pong/add_chat_content.html", {'message': {
+																		'value' : True,
+																		'error_message' : error_message},
+																		'add_chat_info' : add_chat_info}, request=request)
+					return JsonResponse({'html': html,
+										'url' : reverse("add_chat")
+					})
+			else:
+				return render(request, "pong/add_chat.html", {'message': {
+																		'value' : True,
+																		'error_message' : error_message},
+																		'add_chat_info' : add_chat_info})
 	else : 
 		if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
-				html = render_to_string("pong/add_chat_content.html", {}, request=request)
+				html = render_to_string("pong/add_chat_content.html", {'add_chat_info' : add_chat_info}, request=request)
 				return JsonResponse({'html': html,
 									'url' : reverse("add_chat")
 				})
 		else:
-			return render(request, "pong/add_chat.html", {})
-
+			return render(request, "pong/add_chat.html", {'add_chat_info' : add_chat_info})
 
 
 def join_chat(request) :
@@ -874,6 +1024,37 @@ def join_chat(request) :
 			})
 		else:
 			return render(request, "pong/join_chat.html", context)
+
+
+def render_chat(request, chat_name) :
+	if not request.user.is_authenticated:
+		if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+			html = render_to_string("pong/login_content.html", {'message': message}, request=request)
+			return JsonResponse({'html': html,
+								'url' : reverse("index")
+			})
+		else:
+			return HttpResponseRedirect(reverse("index"))
+	all_chats = Chat.objects.all()
+	update_message = {}
+	for chat in all_chats :
+		if chat.name == chat_name :
+			message_chat = chat.messages.all()
+			update_message[chat.name] = []
+			for message in message_chat :
+				update_message[chat.name].append({
+					'message' : message.content,
+					'sender' : message.sender.pseudo,
+					'time' : message.timestamp.isoformat(),
+				})
+			logger.debug("message_chat = %s", message_chat)
+			return JsonResponse({
+				'chat_found' : True,
+				'update_message' : update_message
+			})
+	return JsonResponse({
+		'chat_found' : False,
+	})
 
 
 # def logout_view(request):
@@ -1440,8 +1621,82 @@ def delete_friends(request):
 																})
 
 
-
-
+def other_profile(request, username) :
+	if not request.user.is_authenticated:
+		if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+			html = render_to_string("pong/login_content.html", {}, request=request)
+			return JsonResponse({'html': html})
+		else:
+			return HttpResponseRedirect(reverse("login"))
+	user = NewUser.objects.get(id=(request.session.get('user_id')))
+	logger.debug("user = %s", user)
+	logger.info("Je passe la dans other profile")
+	# username = username
+	logger.debug("username = %s", username)
+	data = {}
+	context = {
+		'user_target' :{
+						'token' : False
+		}
+	}
+	logger.debug("context = %s", context)
+	all_users = NewUser.objects.all()
+	user_target = None
+	is_friend = False
+	logger.debug("all Users = %s", all_users)
+	for user_found in all_users :
+		if user_found.pseudo == username :
+			user_target = user_found
+			break
+	if user_target.pseudo == user.pseudo :
+		if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+			html = render_to_string("pong/profile_content.html", context, request=request)
+			return JsonResponse({'html': html,
+								'url' : ("profile")})
+		else:
+			return render(request, "pong/profile.html", context)
+	# logger.debug("user_target email = %s", user_target.email)
+	# logger.debug("user_target pseudo = %s", user_target.pseudo)
+	# logger.debug("user_target password = %s", user_target.password)
+	logger.debug("user_target avatar = %s", user_target.avatar)
+	# logger.debug("user_target stats = %s", user_target.statistic)
+	# logger.debug("user_target = %s", user_target)
+	user_friend = get_friends(user)
+	try:
+		user_target_avatar = user_target.avatar.url
+	except ValueError:
+		user_target_avatar = None
+	logger.debug("friends = %s", user_friend)
+	for friend in user_friend : 
+		if friend.pseudo == user_target.pseudo :
+			is_friend = True
+			break
+	logger.debug("user_target.statistic = %s", user_target.statistic)
+	data = update_stats(user_target)
+	logger.debug("data = %s", data)
+	history = []
+	partie = Party.objects.all()
+	for game in partie :
+		winner = game.winner.pseudo.strip()
+		loser = game.loser.pseudo.strip()
+		if ((user.pseudo == winner) or (user.pseudo == loser)) :
+			history.append(game)
+	context = {
+		'user_target' : {
+						'token' : True,
+						'username' : user_target.pseudo,
+						'is_friend' : is_friend,
+						'user_avatar' : user_target_avatar,
+						'statistics' : user_target.statistic,
+						'history' : history,
+		}
+	}
+	if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+			html = render_to_string("pong/other_profile_content.html", context, request=request)
+			return JsonResponse({'html': html,
+								'url' : (f"/other_profile/{username}")})
+	else:
+		return render(request, "pong/other_profile.html", context)
 
 # user_id = request.session.get('user_id')
 # 	if not user_id:

@@ -1,4 +1,4 @@
--e [0;34m2024-07-05 13:40:43 - [0mmigration in progess..
+-e [0;34m2024-07-16 19:36:06 - [0mmigration in progess..
 Collecting pyotp
   Downloading pyotp-2.9.0-py3-none-any.whl.metadata (9.8 kB)
 Downloading pyotp-2.9.0-py3-none-any.whl (13 kB)
@@ -6,168 +6,34 @@ Installing collected packages: pyotp
 Successfully installed pyotp-2.9.0
 Collecting qrcode
   Downloading qrcode-7.4.2-py3-none-any.whl.metadata (17 kB)
-Collecting typing-extensions (from qrcode)
-  Downloading typing_extensions-4.12.2-py3-none-any.whl.metadata (3.0 kB)
+Requirement already satisfied: typing-extensions in /usr/local/lib/python3.12/site-packages (from qrcode) (4.12.2)
 Collecting pypng (from qrcode)
   Downloading pypng-0.20220715.0-py3-none-any.whl.metadata (13 kB)
 Downloading qrcode-7.4.2-py3-none-any.whl (46 kB)
-   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 46.2/46.2 kB 1.8 MB/s eta 0:00:00
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 46.2/46.2 kB 4.7 MB/s eta 0:00:00
 Downloading pypng-0.20220715.0-py3-none-any.whl (58 kB)
-   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 58.1/58.1 kB 3.3 MB/s eta 0:00:00
-Downloading typing_extensions-4.12.2-py3-none-any.whl (37 kB)
-Installing collected packages: pypng, typing-extensions, qrcode
-Successfully installed pypng-0.20220715.0 qrcode-7.4.2 typing-extensions-4.12.2
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 58.1/58.1 kB 10.2 MB/s eta 0:00:00
+Installing collected packages: pypng, qrcode
+Successfully installed pypng-0.20220715.0 qrcode-7.4.2
 Collecting Pillow
   Downloading pillow-10.4.0-cp312-cp312-manylinux_2_28_x86_64.whl.metadata (9.2 kB)
 Downloading pillow-10.4.0-cp312-cp312-manylinux_2_28_x86_64.whl (4.5 MB)
-   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 4.5/4.5 MB 20.4 MB/s eta 0:00:00
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 4.5/4.5 MB 24.5 MB/s eta 0:00:00
 Installing collected packages: Pillow
 Successfully installed Pillow-10.4.0
-No changes detected
-Operations to perform:
-  Apply all migrations: admin, auth, contenttypes, pong, sessions
-Running migrations:
-  Applying contenttypes.0001_initial... OK
-  Applying contenttypes.0002_remove_content_type_name... OK
-  Applying auth.0001_initial... OK
-  Applying auth.0002_alter_permission_name_max_length... OK
-  Applying auth.0003_alter_user_email_max_length... OK
-  Applying auth.0004_alter_user_username_opts... OK
-  Applying auth.0005_alter_user_last_login_null... OK
-  Applying auth.0006_require_contenttypes_0002... OK
-  Applying auth.0007_alter_validators_add_error_messages... OK
-  Applying auth.0008_alter_user_username_max_length... OK
-  Applying auth.0009_alter_user_last_name_max_length... OK
-  Applying auth.0010_alter_group_name_max_length... OK
-  Applying auth.0011_update_proxy_permissions... OK
-  Applying auth.0012_alter_user_first_name_max_length... OK
-  Applying pong.0001_initial... OK
-  Applying admin.0001_initial... OK
-  Applying admin.0002_logentry_remove_auto_add... OK
-  Applying admin.0003_logentry_add_action_flag_choices... OK
-  Applying sessions.0001_initial... OK
-Performing system checks...
-
-System check identified no issues (0 silenced).
-July 05, 2024 - 13:40:50
-Django version 5.0.6, using settings 'mysite.settings'
-Starting development server at http://0.0.0.0:8000/
-Quit the server with CONTROL-C.
-
-Je passe ici quand j'appuie sur LOGIN
-Je passe ici quand j'appuie sur LOGIN
-Je passe ici quand j'appuie sur LOGIN
-Je passe ici quand j'appuie sur LOGIN
-Nous passons bien ici 2
-Nous passons bien ici 2
-Nous passons bien ici
-Nous passons bien ici
-Je passe ici quand j'appuie sur LOGIN
-Je passe ici quand j'appuie sur LOGIN
-Je passe ici quand j'appuie sur LOGIN
-Je passe ici quand j'appuie sur LOGIN
-Je passe ici quand j'appuie sur LOGIN
-Je passe ici quand j'appuie sur LOGIN
-Je passe ici quand j'appuie sur LOGIN
-Je passe ici quand j'appuie sur LOGIN
-Je passe ici quand j'appuie sur LOGIN
-Je passe ici quand j'appuie sur LOGIN
-Je passe ici quand j'appuie sur LOGIN
-Je passe ici quand j'appuie sur LOGIN
-Je passe ici quand j'appuie sur LOGIN
-Je passe ici quand j'appuie sur LOGIN
-Je passe ici quand j'appuie sur LOGIN
-Nous passons bien ici 2
-Nous passons bien ici 2
-Nous passons bien ici
-Nous passons bien ici
-Nous passons bien ici 2
-Nous passons bien ici
-Nous passons bien ici
-Nous passons bien ici
-Nous passons bien ici
-Nous passons bien ici
-Nous passons bien ici
-Nous passons bien ici
-Nous passons bien ici
-Je passe ici quand j'appuie sur LOGIN
-Je passe ici quand j'appuie sur LOGIN
-Je passe ici quand j'appuie sur LOGIN
-Je passe ici quand j'appuie sur LOGIN
-Nous passons bien ici 2
-Nous passons bien ici
-Nous passons bien ici
-Nous passons bien ici
-Nous passons bien ici
-Nous passons bien ici 2
-Nous passons bien ici 2
-Je passe ici quand j'appuie sur LOGIN
-Je passe ici quand j'appuie sur LOGIN
-Performing system checks...
-
-System check identified no issues (0 silenced).
-July 05, 2024 - 14:17:37
-Django version 5.0.6, using settings 'mysite.settings'
-Starting development server at http://0.0.0.0:8000/
-Quit the server with CONTROL-C.
-
-Je passe ici quand j'appuie sur LOGIN
-Je passe ici quand j'appuie sur LOGIN
-Performing system checks...
-
-System check identified no issues (0 silenced).
-July 05, 2024 - 14:19:26
-Django version 5.0.6, using settings 'mysite.settings'
-Starting development server at http://0.0.0.0:8000/
-Quit the server with CONTROL-C.
-
-Je passe ici quand j'appuie sur LOGIN oui
-Je passe ici quand j'appuie sur LOGIN oui
-Performing system checks...
-
-System check identified no issues (0 silenced).
-July 05, 2024 - 14:19:59
-Django version 5.0.6, using settings 'mysite.settings'
-Starting development server at http://0.0.0.0:8000/
-Quit the server with CONTROL-C.
-
-Performing system checks...
-
-System check identified no issues (0 silenced).
-July 05, 2024 - 14:20:01
-Django version 5.0.6, using settings 'mysite.settings'
-Starting development server at http://0.0.0.0:8000/
-Quit the server with CONTROL-C.
-
-Performing system checks...
-
-System check identified no issues (0 silenced).
-July 05, 2024 - 14:20:04
-Django version 5.0.6, using settings 'mysite.settings'
-Starting development server at http://0.0.0.0:8000/
-Quit the server with CONTROL-C.
-
-Performing system checks...
-
-System check identified no issues (0 silenced).
-July 05, 2024 - 14:20:10
-Django version 5.0.6, using settings 'mysite.settings'
-Starting development server at http://0.0.0.0:8000/
-Quit the server with CONTROL-C.
-
-Performing system checks...
-
-System check identified no issues (0 silenced).
-July 05, 2024 - 14:20:13
-Django version 5.0.6, using settings 'mysite.settings'
-Starting development server at http://0.0.0.0:8000/
-Quit the server with CONTROL-C.
-
-Performing system checks...
-
-System check identified no issues (0 silenced).
-July 05, 2024 - 14:20:15
-Django version 5.0.6, using settings 'mysite.settings'
-Starting development server at http://0.0.0.0:8000/
-Quit the server with CONTROL-C.
-
+BASE_DIR 1 =  /code
+BASE_dIR = /code
+Statifile dir = ['/code/pong/static']
+-e [0;34m2024-07-16 19:36:14 - [0mUne erreur s'est produite lors de l'exécution de la commande -> python3.12 manage.py makemigrations.
+-e [0;34m2024-07-16 19:36:14 - [0mCode de sortie: 0
+-e [0;34m2024-07-16 19:36:16 - [0mmigration in progess..
+Requirement already satisfied: pyotp in /usr/local/lib/python3.12/site-packages (2.9.0)
+Requirement already satisfied: qrcode in /usr/local/lib/python3.12/site-packages (7.4.2)
+Requirement already satisfied: typing-extensions in /usr/local/lib/python3.12/site-packages (from qrcode) (4.12.2)
+Requirement already satisfied: pypng in /usr/local/lib/python3.12/site-packages (from qrcode) (0.20220715.0)
+Requirement already satisfied: Pillow in /usr/local/lib/python3.12/site-packages (10.4.0)
+BASE_DIR 1 =  /code
+BASE_dIR = /code
+Statifile dir = ['/code/pong/static']
+-e [0;34m2024-07-16 19:36:22 - [0mUne erreur s'est produite lors de l'exécution de la commande -> python3.12 manage.py makemigrations.
+-e [0;34m2024-07-16 19:36:22 - [0mCode de sortie: 0

@@ -110,7 +110,8 @@ class BlockedUser(models.Model):
 class Chat(models.Model):
 	name = models.CharField(max_length=255, unique=True, default=shortuuid.uuid)
 	participants = models.ManyToManyField(settings.AUTH_USER_MODEL, through='Participant', related_name='chats')
-	messages = models.ManyToManyField('Message', related_name='chats', blank=True)
+	messages = models.ManyToManyField('Message', related_name='chats', blank=True, null=True)
+	is_private = models.BooleanField(default=False)
 
 	def __str__(self):
 		return self.name
@@ -133,15 +134,15 @@ class Message(models.Model):
 	def __str__(self):
 		return f'{self.sender.pseudo}: {self.content}'
 	
-def send_message(chat, sender, content):
-	message = Message.objects.create(sender=sender, content=content)
+def send_message(chat, message):
+	# message = Message.objects.create(sender=sender, content=content)
 	chat.messages.add(message)
 
 	# Deliver the message to participants who haven't blocked the sender
-	for participant in chat.participants.all():
-		if not participant.is_blocked(sender):
-			# Logic to deliver the message to the participant
-			pass
+	# for participant in chat.participants.all():
+	# 	if not participant.is_blocked(sender):
+	# 		# Logic to deliver the message to the participant
+	# 		pass
 
 class Friendship(models.Model):
 	person1 = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='friendships', on_delete=models.CASCADE)

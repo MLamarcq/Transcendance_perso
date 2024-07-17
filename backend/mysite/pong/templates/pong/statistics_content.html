@@ -1,7 +1,7 @@
 {% load static %}
 
 
-
+<link href="{% static 'pong/css/statistics.css' %}" rel="stylesheet">
 <div class="stats">
 	<!-- <div class="score_board">
 		<span>4</span>
@@ -10,18 +10,18 @@
 		<section class="left_board">
 			<h1>YOUR STATS</h1>
 			<ul>
-				{% if statistics %}
+				{% if data.user_statistic %}
 					<h3>Game Won</h3>
-					<li>{{ statistics.nbr_won_parties }}</li>
+					<li>{{ data.user_statistic.nbr_won_parties }}</li>
 					
 					<h3>Game Lost</h3>
-					<li>{{ statistics.nbr_lose_parties }}</li>
+					<li>{{ data.user_statistic.nbr_lose_parties }}</li>
 					
 					<h3>Time played</h3>
-					<li>{{ statistics.total_time_played }}</li>
+					<li>{{ data.user_statistic.total_time_played }}</li>
 					
 					<h3>Won Tournament</h3>
-					<li>{{ statistics.nbr_won_tournaments }}</li>
+					<li>{{ data.user_statistic.nbr_won_tournaments }}</li>
 				{% else %}
 					<h3>Game Won</h3>
 					<li>0</li>
@@ -57,7 +57,7 @@
 			<div class="tbody-container">
 				<table>
 					<tbody>
-						{% for game in history %}
+						{% for game in data.history %}
 							{% if game.winner.pseudo == user.pseudo %}
 								<tr>
 									<td class="victory">{{game.date}}</td>
@@ -94,8 +94,8 @@
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 	<script>
-		var gameDates = JSON.parse('{{ game_dates_json|escapejs }}');
-		var gameResults = JSON.parse('{{ game_results_json|escapejs }}');
+		var gameDates = JSON.parse('{{ data.game_dates_json|escapejs }}');
+		var gameResults = JSON.parse('{{ data.game_results_json|escapejs }}');
 	  
 		var ctx = document.getElementById('myChart').getContext('2d');
 	  
@@ -168,12 +168,12 @@
 		});
 	</script>
 	<script>
-		var game_duration = JSON.parse('{{ game_duration_json|escapejs }}');
+		var game_duration = JSON.parse('{{ data.game_duration_json|escapejs }}');
 
 		console.log(game_duration);
 
-		let dates = [];
-		let durations = [];
+		var dates = [];
+		var durations = [];
 
 		for(const [date, duration] of Object.entries(game_duration))
 		{

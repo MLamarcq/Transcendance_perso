@@ -9,7 +9,7 @@
 //             console.log('Navigating to:', event.state.path);
 //             const path = event.state.path;
 //             currentIndex = customHistory.indexOf(path); // Synchronize custom history index
-//             // let i = customHistory.length;
+//             // var i = customHistory.length;
 //             // while (i > 0)
 //             // {
 //             //     if (customHistory[i] === event.state.path)
@@ -55,14 +55,14 @@
 
 // // DEFINITIONB DES FONCTIONS
 
-// let customHistory = [];
-// let currentIndex = -1;
+// var customHistory = [];
+// var currentIndex = -1;
 
 
 // function loadContent(path, addToHistory) {
 //     console.log("addTohistory = ", addToHistory);
 //     console.log('Loading content from:', path);
-//     let toggle = false;
+//     var toggle = false;
 //     fetch(path, {
 //         headers: { 'X-Requested-With': 'XMLHttpRequest' }
 //     })
@@ -110,7 +110,7 @@
 // }
 
 
-// // let customHistory = [];
+// // var customHistory = [];
 
 // // function loadContent(path) {
 // //     console.log('Loading content from:', path);
@@ -194,7 +194,7 @@ document.addEventListener('DOMContentLoaded', () => {
             console.log('Navigating to:', event.state.path);
             const path = event.state.path;
             currentIndex = customHistory.indexOf(path); // Synchronize custom history index
-            // let i = customHistory.length;
+            // var i = customHistory.length;
             // while (i > 0)
             // {
             //     if (customHistory[i] === event.state.path)
@@ -240,14 +240,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // DEFINITIONB DES FONCTIONS
 
-let customHistory = [];
-let currentIndex = -1;
+var customHistory = [];
+var currentIndex = -1;
 
 
 function loadContent(path, addToHistory) {
     console.log("addTohistory = ", addToHistory);
     console.log('Loading content from:', path);
-    let toggle = false;
+    var toggle = false;
     fetch(path, {
         headers: { 'X-Requested-With': 'XMLHttpRequest' }
     })
@@ -263,7 +263,7 @@ function loadContent(path, addToHistory) {
                 script_array = Array.from(document.getElementById('app').querySelectorAll("script"));
                 console.log("script_array =", script_array);
                 script_array.forEach((script) => {
-                    let new_script = document.createElement('script');
+                    var new_script = document.createElement('script');
                     new_script.innerHTML = script.textContent;
                     script.remove();
                     document.getElementById('app').appendChild(new_script);
@@ -305,7 +305,7 @@ function loadContent(path, addToHistory) {
 }
 
 
-// let customHistory = [];
+// var customHistory = [];
 
 // function loadContent(path) {
 //     console.log('Loading content from:', path);
@@ -355,7 +355,7 @@ function printCustomHistory()
 
 function submitForm(form, addToHistory) {
     const formData = new FormData(form);
-    let toggle = false;
+    var toggle = false;
     console.log("Submitting form:", form.action);
     fetch(form.action, {
         method: form.method || 'POST',
@@ -374,7 +374,7 @@ function submitForm(form, addToHistory) {
                 script_array = Array.from(document.getElementById('app').querySelectorAll("script"));
                 console.log("script_array =", script_array);
                 script_array.forEach((script) => {
-                    let new_script = document.createElement('script');
+                    var new_script = document.createElement('script');
                     new_script.innerHTML = script.textContent;
                     script.remove();
                     document.getElementById('app').appendChild(new_script);
@@ -383,7 +383,7 @@ function submitForm(form, addToHistory) {
                 // script_array = Array.from(document.getElementById('app').querySelectorAll("script"));
                 // console.log("script_array =", script_array);
                 // script_array.forEach((script) => {
-                //     let new_script = document.createElement('script');
+                //     var new_script = document.createElement('script');
                 //     new_script.innerHTML = script.textContent;
                 //     script.remove();
                 //     document.body.appendChild(new_script);

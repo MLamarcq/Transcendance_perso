@@ -6,7 +6,8 @@
 section
 {
 	width: 90%;
-	height: calc(100vh - (2 * var(--margin-header)) - 90px);
+	height: calc(90vh - (2 * var(--margin-header)) - 90px);
+	/* height: 100%; */
 	margin: var(--margin-header) 5%;
 	display: flex;
 	flex-direction: row;
@@ -54,12 +55,26 @@ article
 {
 	width: calc(100% - (10px * 2) - 150px - 10px);
 	margin: 0 10px;
-	padding-left: 10px;
+	/* padding-left: 10px; */
+	padding: 5px;
+	color: var(--input);
+	background: none;
+	border: 2px solid var(--input);
+	text-shadow:
+		0 0 5px var(--input),
+		0 0 5px black;
+	
 }
 .msg form input[type="submit"]
 {
 	margin: 0 10px 0 0 ;
 	width: 150px;
+	color: var(--last-purple);
+	border: 2px solid var(--last-purple);
+	text-shadow:
+		0 0 5px var(--last-purple),
+		0 0 5px black;
+	background: none;
 }
 
 
@@ -161,7 +176,7 @@ aside ul
 
 }
 
-aside ul li
+aside ul li a
 {
 	padding: 10px;
 	border-bottom: solid 1px black;
@@ -169,11 +184,16 @@ aside ul li
 	width: 100%;
 	font-size: 20px;
 	font-weight: bold;
+	color: var(--green);
+	text-decoration: none;
+	text-shadow: 
+		0 0 5px black,
+		0 0 5px black;
 	/* margin-bottom: 1px; */
 	/* border-radius: 5%; */
 }
 
-aside ul li:hover
+aside ul li a:hover
 {
 	text-shadow:
 	0 0 5px white,
@@ -204,4 +224,114 @@ aside ul li:hover
 /* aside ul li:not(:lastchild)
 {
 	
+} */
+
+.sub-header
+{
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	flex-direction: row;
+	/* margin: 30px; */
+	padding: 10px;
+}
+
+.link_chat
+{
+	position: relative;
+	top: 20px;
+	margin-left: 6%;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	flex-direction: row;
+	width: 30%;
+}
+
+.link_chat a
+{
+	background: none;
+	text-decoration: none;
+	text-align: center;
+	font-size : 15px;
+	color: var(--orange);
+	border: 2px solid var(--orange);
+	margin: 0px 10px;
+	padding: 10px;
+	border-radius: 10px;
+}
+
+.link_chat a:hover
+{
+	text-shadow: 
+		0 0 5px var(--orange),
+		0 0 5px black,
+		0 0 5px black;
+}
+
+.form_chat
+{
+	position: relative;
+	top: 20px;
+	right: 8%;
+}
+
+.form_chat h1
+{
+	font-size: 20px;
+	color: var(--light-blue);
+	text-align: center;
+	text-shadow: 
+		0 0 5px var(--light-blue),
+		0 0 5px black,
+		0 0 5px black;
+}
+
+.form_chat form input[type="text"]
+{
+	color: var(--input);
+	background: none;
+	border: 2px solid var(--input);
+	border-radius: 10px;
+	padding : 10px;
+	margin: 0px 5px;
+	font-size: 15px;
+}
+
+.form_chat form input[type="submit"]
+{
+	color: var(--last-purple);
+	background: none;
+	border: 2px solid var(--last-purple);
+	border-radius: 10px;
+	padding : 10px;
+	margin: 0px 5px;
+	font-size: 15px;
+}
+
+.message_form_chat
+{
+	text-align: center;
+	margin-top: 5px;
+	font-size: 15px;
+	color: var(--orange);
+	text-shadow: 
+	0 0 5px black,
+	0 0 5px black,
+	0 0 5px black;
+}
+
+.msg_form
+{
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	padding: 0;
+	margin: 0;
+}
+
+/* .msg_form li, .msg_form a 
+{
+	margin: 5px 0;
 } */

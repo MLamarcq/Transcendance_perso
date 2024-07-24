@@ -1,0 +1,323 @@
+main
+{
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	flex-direction: column;
+	height: 50%;
+	width: 100%;
+}
+
+.div_title
+{
+	position: relative;
+	top: 10%;
+	display : flex;
+	justify-content: center;
+	align-items: center;
+	width: 100%;
+	height: 20%;
+}
+
+.title
+{
+	text-align: center;
+	color: var(--light-blue);
+	font-size: 30px;
+	text-shadow: 
+		0 0 5px black,
+		0 0 5px black;
+	/* margin-top : 30px; */
+	padding: 10px;
+}
+
+.no_private h1
+{
+	color: var(--light-blue);
+	font-size: 25px;
+	text-shadow :
+		0 0 5px var(--light-blue);
+	text-align: center;
+}
+
+.no_private
+{
+	position: relative;
+	top: 20%;
+	background: rgba(0, 0, 0, 0.5);
+	width: 80%;
+	height: 80%;
+	display : flex;
+	justify-content: center;
+	align-items: center;
+	flex-direction: column;
+}
+
+.no_private form
+{
+	padding : 10px;
+	margin-top : 30px;
+}
+
+
+.no_private form input
+{
+	padding : 7px;
+}
+
+
+.no_private form input[type="submit"]
+{
+	background: none;
+	color: rgb(177, 47, 217);
+	border: 2px solid rgb(177, 47, 217);
+	border-radius: 5px;
+}
+
+.no_private form input[type="text"]
+{
+	background: none;
+	color:var(--input);
+	border: 2px solid var(--input);
+	border-radius: 5px;
+}
+
+.no_private form input[type="submit"]:hover
+{
+	background: none;
+	font-size: 18px;
+}
+
+.private
+{
+	display: flex;
+	justify-content: space-around;
+	align-items: center;
+	flex-direction: row;
+	background: rgba(0, 0, 0, 0.5);
+	width: 100%;
+	height: 100%;
+	position : relative;
+	top: 20%;
+	/* margin-right: 20px; */
+}
+
+/* .private section
+{
+	width: 100%;
+	height: 100%;
+} */
+
+.left
+{
+	display: flex;
+	justify-content: space-around;
+	align-items: center;
+	flex-direction: column;
+	height: 100%;
+	width: 100%;
+}
+.add_chat
+{
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	flex-direction: column;
+	width: 100%;
+	height: 100%;
+}
+
+.add_chat h1
+{
+	color: var(--light-blue);
+	font-size: 25px;
+	text-shadow :
+		0 0 5px var(--light-blue);
+	text-align: center;
+}
+
+.add_chat form
+{
+	padding : 10px;
+	margin-top : 30px;
+}
+
+
+.add_chat form input
+{
+	padding : 7px;
+}
+
+
+.add_chat form input[type="submit"]
+{
+	background: none;
+	color: rgb(177, 47, 217);
+	border: 2px solid rgb(177, 47, 217);
+	border-radius: 5px;
+}
+
+.add_chat form input[type="text"]
+{
+	background: none;
+	color:var(--input);
+	border: 2px solid var(--input);
+	border-radius: 5px;
+}
+
+.add_chat form input[type="submit"]:hover
+{
+	background: none;
+	font-size: 18px;
+}
+/* 
+.add_private
+{
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	flex-direction: row;
+	height: 100%;
+	width: 100%;
+} */
+
+.create_div
+{
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	flex-direction: column;
+}
+
+.create_div h1
+{
+	color: var(--light-blue);
+	font-size: 25px;
+	text-shadow :
+		0 0 5px var(--light-blue);
+	text-align: center;
+}
+
+.create_div form
+{
+	padding : 10px;
+	margin-top : 30px;
+}
+
+
+.create_div form input
+{
+	padding : 7px;
+}
+
+
+.create_div form input[type="submit"]
+{
+	background: none;
+	color: #b12fd9;
+	border: 2px solid rgb(177, 47, 217);
+	border-radius: 5px;
+}
+
+.create_div form input[type="text"]
+{
+	background: none;
+	color:var(--input);
+	border: 2px solid var(--input);
+	border-radius: 5px;
+}
+
+.create_div form input[type="submit"]:hover
+{
+	background: none;
+	font-size: 18px;
+}
+
+
+.friend_div
+{
+	display: flex;
+	flex-direction: column;
+	justify-content: start;
+	align-items: center;
+	height: 100%;
+	position: relative;
+	/* bottom: 110px; */
+	top: 16%;
+}
+
+.friend_div h1
+{
+	color: var(--light-blue);
+	font-size: 25px;
+	text-shadow :
+		0 0 5px var(--light-blue);
+	text-align: center;
+}
+
+.friend_div ul
+{
+	margin-top: 30px;
+	width: 300px;
+}
+
+.friend_div ul li
+{
+	color: var(--input);
+	border: 2px solid var(--input);
+	border-radius: 5px;
+	text-align: center;
+	padding: 9px;
+	text-shadow: 
+		0 0 5px var(--input);
+	width: 100%;
+}
+.blocked-div
+{
+	display: flex;
+	flex-direction: column;
+	justify-content: start;
+	align-items: center;
+	height: 100%;
+	position: relative;
+	/* bottom: 110px; */
+	top: 16%;
+	width: 80%;
+}
+
+.blocked-div h1
+{
+	color: var(--light-blue);
+	font-size: 25px;
+	text-shadow :
+		0 0 5px var(--light-blue);
+	text-align: center;
+}
+
+.blocked-div ul
+{
+	margin-top: 30px;
+	width: 100%;
+}
+.blocked-div ul li
+{
+	color: var(--input);
+	border: 2px solid var(--input);
+	border-radius: 5px;
+	text-align: center;
+	padding: 9px;
+	text-shadow: 
+		0 0 5px var(--input);
+	width: 100%;
+}
+
+
+.p_no_friend
+{
+	margin-top: 30px;
+	color: var(--last-purple);
+	border: 2px solid var(--last-purple);
+	border-radius: 5px;
+	font-size: 15px;
+	padding: 9px;
+}

@@ -1,48 +1,58 @@
 {% load static %}
 
 <link href="{% static 'pong/css/chat.css' %}" rel="stylesheet">
-<a href="{% url 'add_chat' %}" alt="ADD_CHAT">ADD CHAT</a>
-<a href="{% url 'join_chat' %}" alt="JOIN_CHAT">JOIN CHAT</a>
+
+<div class="sub-header">
+	<div class="link_chat">
+		<a href="{% url 'add_chat' %}" alt="ADD_CHAT">ADD CHAT</a>
+		<a href="{% url 'join_chat' %}" alt="JOIN_CHAT">JOIN CHAT</a>
+		<a href="{% url 'leave_chat' %}" alt="LEAVE CHAT">LEAVE CHAT</a>
+	</div>
+	<div class="form_chat">
+		<h1>BLOCK A USER</h1>
+		{% if is_solo %}
+			<form action="{% url 'chat_solo' %}" method="post">
+				{% csrf_token %}
+				<input type="text" name="user_target" placeholder="PSEUDO">
+				<input type="submit" value="BLOCK">
+			</form>
+		{% else %}
+			<form action="{% url 'chat_room' chat_name %}" method="post">
+				{% csrf_token %}
+				<input type="text" name="user_target" placeholder="PSEUDO">
+				<input type="submit" value="BLOCK">
+			</form>
+		{% endif %}
+		{% if message_block %}
+			<p class="message_form_chat">{{ message_block }}</p>
+		{% endif %}
+	</div>
+</div>
 <section>
 	<aside>
 		{% if chat_info.list_of_chats %}
 			<ul class="text-center">
 				{% for chats in chat_info.list_of_chats %}
-				<!-- <li class="clickable-element">Imrane</li>
-				<li class="clickable-element">Gael</li>
-				<li class="clickable-element">Cyril</li>
-				<li class="clickable-element">Mathieu</li> -->
-					<li><a href="{% url 'chat_room' chats.name %}">{{chats.name}}</a></li>
+					<li class="clickable-element"><a href="{% url 'chat_room' chats.name %}">{{chats.name}}</a></li>
 				{% endfor %}
 			</ul>
 		{% endif %}
 	</aside>
 	<article>
 		<div class="chat"><!--
-		--><ul class="text-center">
-				<!-- <li class="moi">Coucou</li>
-				<li class="moi">Ca va ?</li>
-				<li class="toi">Hello bien et tout</li>
-				<li class="toi">*toi</li>
-				<li class="moi">yayayaya</li>
-				<li class="toi">Lorem ipsum dolor sit amet consectetur, adipisicing elit. Est aliquam voluptatem fugiat nam molestiae iste? Odit, praesentium sapiente quia, recusandae autem ducimus nihil fuga ullam minus placeat natus aut eius.</li>
-				<li class="toi">Lorem ipsum dolor sit amet consectetur, adipisicing elit. Est aliquam voluptatem fugiat nam molestiae iste? Odit, praesentium sapiente quia, recusandae autem ducimus nihil fuga ullam minus placeat natus aut eius.</li>
-				<li class="toi">Lorem ipsum dolor sit amet consectetur, adipisicing elit. Est aliquam voluptatem fugiat nam molestiae iste? Odit, praesentium sapiente quia, recusandae autem ducimus nihil fuga ullam minus placeat natus aut eius.</li>
-				<li class="toi">Lorem ipsum dolor sit amet consectetur, adipisicing elit. Est aliquam voluptatem fugiat nam molestiae iste? Odit, praesentium sapiente quia, recusandae autem ducimus nihil fuga ullam minus placeat natus aut eius.</li>
-				<li class="toi">Lorem ipsum dolor sit amet consectetur, adipisicing elit. Est aliquam voluptatem fugiat nam molestiae iste? Odit, praesentium sapiente quia, recusandae autem ducimus nihil fuga ullam minus placeat natus aut eius.</li> -->
+		--><ul class="text-center msg_form">
 			</ul>
 		</div>
 		<div class="msg">
 			<form action="{% url 'chat_room' chat_name %}" method="post">
 				{% csrf_token %}
-				<input type="text" name="message_content" placeholder="Message">
-				<input type="submit" value="Send">
+				<input type="text" name="message_content" placeholder="MESSAGE">
+				<input type="submit" value="SEND">
 			</form>
 		</div>
 	</article>
 </section>
 <script>
-	// Définir une URL de base avec un espace réservé
 	var oterhProfileUrlBase = "{% url 'other_profile' 'SENDER_PLACEHOLDER' %}";
 </script>
 <script>
@@ -67,7 +77,8 @@
 		chat.innerHTML = "";
 		messageInfo[chatName].forEach((msg) => {
 			var li = document.createElement("li");
-			var a = document.createElement("a")
+			var a = document.createElement("a");
+			// var div = document.createElement("div");
 			li.textContent = msg.message;
 			a.textContent = msg.sender;
 			if (msg.sender != document.querySelector('a[alt="Profil"] span').textContent)
@@ -78,8 +89,9 @@
 			{
 				li.setAttribute("class", "moi")
 			}
-			chat.append(li);
-			chat.append(a);
+			// div.setAttribute("class", "msg_form");
+			chat.appendChild(li);
+			chat.appendChild(a);
 		})
 		var displayChatInterval = setInterval(function () {
 			console.log(" --------- 1000ms ---------");
@@ -121,8 +133,8 @@
 							console.log("profileUrl = ", profileUrl, "encodeURIComponent(msg.sender) = ", encodeURIComponent(msg.sender))
 							a.setAttribute("href", profileUrl)
 							console.log("a = ", a)
-							chat.append(li);
-							chat.append(a);
+							chat.appendChild(li);
+							chat.appendChild(a);
 						})
 					}
 				}

@@ -175,6 +175,8 @@ main
 	padding: 10px;
 	margin: 10px;
 	border-radius: 10px;
+	color: white;
+	text-align: center;
 }
 
 .friend_list ul li::before
@@ -419,9 +421,9 @@ header
 	text-align: center;
 	/* color: var(--green); */
 	/* color: white; */
-	color: var(--orange);
+	color: white;
 	text-shadow: 
-		0 0 5px var(--orange);
+		0 0 5px white;
 	padding: 10px;
 }
 
@@ -448,6 +450,39 @@ header
 	margin-left: 8px;
 }
 
+.change_little form input[type="text"]
+{
+	background: none;
+	color: var(--input);
+	border: 2px solid var(--input);
+	border-radius: 5px;
+	text-shadow:
+		0 0 5px var(--input),
+		0 0 5px black;
+}
+
+.change_little form input[type="file"]
+{
+	background: none;
+	color: var(--input);
+	border: 2px solid var(--input);
+	border-radius: 5px;
+	text-shadow:
+		0 0 5px var(--input),
+		0 0 5px black;
+}
+
+.change_little form input[type="submit"]
+{
+	background: none;
+	color: var(--last-purple);
+	border: 2px solid var(--last-purple);
+	border-radius: 5px;
+	text-shadow:
+		0 0 5px var(--last-purple),
+		0 0 5px black;
+}
+
 .form_left
 {
 	width: 450px;
@@ -457,9 +492,19 @@ header
 {
 	padding : 5px;
 	position: relative;
-	left: 10%;
+	/* left: 10%; */
 	display: flex;
 	flex-direction: column;
+	width: 100%;
+}
+
+.pass
+{
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	width: 100%;
 }
 
 .form_password label
@@ -468,10 +513,24 @@ header
 	text-align: center;
 	/* color: var(--green); */
 	/* color: white; */
-	color: var(--orange);
+	color: white;
 	text-shadow: 
-		0 0 5px var(--orange);
-	padding: 10px;
+		0 0 5px white;
+	padding: 5px;
+}
+
+.form_password input[type="password"]
+{
+	margin: 0 10px;
+	/* padding-left: 10px; */
+	padding: 5px;
+	color: var(--input);
+	background: none;
+	border-radius: 5px;
+	border: 2px solid var(--input);
+	text-shadow:
+		0 0 5px var(--input),
+		0 0 5px black;
 }
 
 .button_password
@@ -483,7 +542,7 @@ header
 	background: white;
 	border-radius: 5px;
 	position: relative;
-	left: 15%;
+	left: 25%;
 	border: 2px solid white;
 	padding: 1%;
 }

@@ -2,14 +2,16 @@
 
 <link href="{% static 'pong/css/add_chat.css' %}" rel="stylesheet">
 
-<h1>CREATE A NEW CHAT</h1>
+<div class="div_title">
+	<h1 class="title">CREATE A NEW CHAT</h1>
+</div>
 {% if not add_chat_info.token %}
 	<div class="no_private">
 		<section>
 			<h1>NEW CHAT NAME</h1>
 			<form acion="{% url 'add_chat' %}" method="post">
 				{% csrf_token %}
-				<input type="text" name="chat_name" placeholder="Pseudo">
+				<input type="text" name="chat_name" placeholder="NAME">
 				<input type="submit" value="Confirmed">
 			</form>
 		</section>
@@ -19,42 +21,48 @@
 	</div>
 {% else %}
 	<div class="private">
-		<section>
-			<h1>NEW CHAT NAME</h1>
-			<form acion="{% url 'add_chat' %}" method="post">
-				{% csrf_token %}
-				<input type="text" name="chat_name" placeholder="Pseudo">
-				<input type="submit" value="Confirmed">
-			</form>
-		</section>
-		<section>
-			<h1>CREATE A PRIVATE DISCUSSION</h1>
-			<form acion="{% url 'add_chat' %}" method="post">
-				{% csrf_token %}
-				<input type="text" name="private_chat" placeholder="Pseudo">
-				<input type="submit" value="Confirmed">
-			</form>
-			<h1>FRIENDS</h1>
-			{% if add_chat_info.users_ok %}
-				<ul>
-					{% for users in add_chat_info.users_ok %}
-						<li>{{users.pseudo}}</li>
-					{% endfor %}
-				</ul>
-			{% else %}
-				<p>NO USERS AVALAIBLE</p>
-			{% endif %}
-			<h1>BLOCKED FRIENDS</h1>
-			{% if add_chat_info.blocked_users %}
-				<ul>
-					{% for users in add_chat_info.blocked_users %}
-						<li>{{users.pseudo}}</li>
-					{% endfor %}
-				</ul>
-			{% else %}
-				<p>NO FRIEND BLOCKED</p>
-			{% endif %}
-		</section>
+		<div class="left">
+			<section class="add_chat">
+				<h1>NEW CHAT NAME</h1>
+				<form acion="{% url 'add_chat' %}" method="post">
+					{% csrf_token %}
+					<input type="text" name="chat_name" placeholder="Pseudo">
+					<input type="submit" value="Confirmed">
+				</form>
+			</section>
+			<section class="create_div">
+					<h1>CREATE A DIRECT MESSAGE </h1>
+					<form acion="{% url 'add_chat' %}" method="post">
+						{% csrf_token %}
+						<input type="text" name="private_chat" placeholder="Pseudo">
+						<input type="submit" value="Confirmed">
+					</form>
+			</section>
+		</div>
+			<div class="friend_div">
+				<h1>FRIENDS</h1>
+				{% if add_chat_info.users_ok %}
+					<ul>
+						{% for users in add_chat_info.users_ok %}
+							<li>{{users.pseudo}}</li>
+						{% endfor %}
+					</ul>
+				{% else %}
+					<p>NO USERS AVALAIBLE</p>
+				{% endif %}
+			</div>
+			<div class="blocked-div">
+				<h1>BLOCKED FRIENDS</h1>
+				{% if add_chat_info.blocked_users %}
+					<ul>
+						{% for users in add_chat_info.blocked_users %}
+							<li>{{users.pseudo}}</li>
+						{% endfor %}
+					</ul>
+				{% else %}
+					<p class="p_no_friend">NO FRIEND BLOCKED</p>
+				{% endif %}
+			</div>
 	</div>
 	{% if message.value %}
 		<p>{{ message.error_message }}</p>

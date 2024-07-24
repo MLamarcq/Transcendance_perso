@@ -1,0 +1,35 @@
+{% load static %}
+
+<link href="{% static 'pong/css/leave_chat.css' %}" rel="stylesheet">
+
+<h1 class=title>LEAVE CHAT</h1>
+<div class="body_content">
+	<div class="action-part">
+		<section>
+			<h1>TYPE A CHAT NAME</h1>
+			<form action="{% url 'leave_chat' %}" method="post">
+				{% csrf_token %}
+				<input type="text" name="chat_name" placeholder="Pseudo">
+				<input type="submit" value="Confirmed">
+			</form>
+		</section>
+		<section>
+			<h1>LIST OF YOUR CHAT</h1>
+			{% if list_of_chats %}
+			<ul>
+				{% for chats in list_of_chats %}
+				<li>{{chats.name}}</li>
+				{% endfor %}
+			</ul>
+			{% else %}
+			<p>NO CHAT AVAILABLE</p>
+			{% endif %}
+		</section>
+	</div>
+	{% if message %}
+		<p class="message">{{ message.message }}</p>
+	{% endif %}
+	{% if error_message %}
+		<p class="error_message">{{ error_message.error_message }}</p>
+	{% endif %}
+</div>

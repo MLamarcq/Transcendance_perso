@@ -174,7 +174,7 @@ input[type="submit"]:hover
 .avatar
 {
 	border-radius: 5px;
-	background: linear-gradient(var(--input) 50%, gray) ;
+	/* background: linear-gradient(var(--input) 50%, gray) ; */
 	padding: 2% 6%;
 	margin: 2% 0;
 	text-shadow: none;

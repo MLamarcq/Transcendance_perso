@@ -20,4 +20,5 @@ urlpatterns = [
     path("join_chat", views.join_chat, name="join_chat"),
     path("render_chat/<chat_name>", views.render_chat, name="render_chat"),
     path("other_profile/<username>", views.other_profile, name="other_profile"),
+    path("leave_chat", views.leave_chat, name="leave_chat"),
 ]

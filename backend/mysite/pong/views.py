@@ -596,7 +596,7 @@ def statistics(request):
 def chat_solo(request):
 	if not request.user.is_authenticated:
 		if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
-			html = render_to_string("pong/login_content.html", {'message': message}, request=request)
+			html = render_to_string("pong/login_content.html", {}, request=request)
 			return JsonResponse({'html': html,
 								'url' : reverse("index")
 			})
@@ -604,6 +604,7 @@ def chat_solo(request):
 			return HttpResponseRedirect(reverse("index"))
 	user = NewUser.objects.get(id=(request.session.get('user_id')))
 	chats = Chat.objects.all() #if none 
+	message_block = None
 	if not chats :
 		if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
 			html = render_to_string("pong/add_chat_content.html", {}, request=request)
@@ -645,7 +646,46 @@ def chat_solo(request):
 				'message_info' : json.dumps(message_info),
 				'chat_name' : name_chat,
 				'chat_name_json' : json.dumps({'chat_name' : name_chat}),
+				'message_block' : message_block,
+				'is_solo' : True
 	}
+	if request.method == 'POST' :
+		if request.POST.get('user_target') :
+			logger.info("Oui c'est bon")
+			user_target = request.POST.get('user_target')
+			all_users = NewUser.objects.all()
+			# message = None
+			found = False
+			for founded in all_users : 
+				if (user_target == founded.pseudo) :
+					if founded.pseudo == user.pseudo :
+						message_block = "You can't block yourself"
+					else :
+						found = True
+					break
+			if found :
+				BlockedUser.objects.create(blocker=user, blocked_user=user_target)
+				message_block = f"{user_target} has been blocked"
+			elif not found and not message_block :
+				message_block = f"{user_target} doesn't exist"
+			if message_block :
+				context['message_block'] = message_block
+			# chat_name_url = None
+			# if chat_name :
+			# 	chat_name_url = chat_name
+			# else: 
+			chat_name_url = name_chat
+			logger.debug("message = %s", context['message'])
+			logger.debug("context = %s", context)
+			BlockedUser_all = BlockedUser.objects.all()
+			logger.debug("BlockedUser_all = %s", BlockedUser_all)
+		if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+			html = render_to_string("pong/chat_content.html", context, request=request)
+			return JsonResponse({'html': html,
+									'url' : reverse("chat_solo")
+				})
+		else:
+			return render(request, "pong/chat.html", context)
 	if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
 		html = render_to_string("pong/chat_content.html", context, request=request)
 		return JsonResponse({'html': html,
@@ -665,10 +705,14 @@ def chat_room(request, chat_name):
 		else:
 			return HttpResponseRedirect(reverse("index"))
 	user = NewUser.objects.get(id=(request.session.get('user_id')))
-	chats = Chat.objects.all() #if none 
+	chats = Chat.objects.all() #if none
+	message_block = None
 	if not chats :
 		if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
-			html = render_to_string("pong/add_chat_content.html", {}, request=request)
+			html = render_to_string("pong/add_chat_content.html", {'chat_info' : {
+																					'value' : True,
+																					'list_of_chats' : list_of_chats,
+																				}}, request=request)
 			return JsonResponse({'html': html,
 								'url' : reverse("add_chat")
 			})
@@ -695,7 +739,9 @@ def chat_room(request, chat_name):
 	context = {'chat_info' : None,
 					'message_info' : None,
 					'chat_name' : None,
-					'chat_name_json' : None
+					'chat_name_json' : None,
+					'message_block' : message_block,
+					'is_solo' : False
 		}
 	if not chat_name :
 		for chat in reversed(list_of_chats) :
@@ -714,20 +760,21 @@ def chat_room(request, chat_name):
 		context['chat_name'] = name_chat
 		context['chat_name_json'] = json.dumps({'chat_name' : name_chat})
 	else :
+		toggle = True
 		for chat in reversed(list_of_chats) :
 			if (chat.name == chat_name) :
-				toggle = True
 				messages = chat.messages.all()
 				message_info[chat.name] = []
 				for message in messages :
-					blocked_object = BlockedUser.objects.all()
-					blocked_list = []
-					if blocked_object :
-						for blocked in blocked_object :
-							if user.pseudo == blocked.blocker.pseudo :
-								if message.sender == blocked.blocked.pseudo :
-									toggle = False
-					if toggle :
+					# blocked_object = BlockedUser.objects.all()
+					# blocked_list = []
+					# if blocked_object :
+					# 	for blocked in blocked_object :
+					# 		if user.pseudo == blocked.blocker.pseudo :
+					# 			if message.sender == blocked.blocked.pseudo :
+					# 				toggle = False
+					toggle = is_blocked(user, message.sender)
+					if not toggle :
 						message_info[chat.name].append({
 							'message' : message.content,
 							'sender' : message.sender.pseudo,
@@ -743,30 +790,79 @@ def chat_room(request, chat_name):
 		context['chat_name'] = chat_name
 		context['chat_name_json'] = json.dumps({'chat_name' : chat_name})
 	if request.method == "POST" : 
-		message_content = request.POST.get("message_content")
-		logger.debug("message_content = %s", message_content)
-		logger.debug("context = %s", context)
-		# chat_id = request.POST.get('chat_id')
-		# logger.debug("chat_id = %s", chat_id)
-		# chat = get_object_or_404(Chat, id=chat_id)
-		# logger.debug("chat = %s", chat)
-		chat_name_url = None
-		if chat_name :
-			chat_name_url = chat_name
-		else: 
-			chat_name_url = name_chat
-		chat_object = Chat.objects.get(name=chat_name_url)
-		logger.debug("chat_objet = %s", chat_object)
-		message_object = Message.objects.create(sender=user, content=message_content)
-		message_object.save()
-		send_message(chat_object, message_object)
-		chat_object.save()
-		if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
-			html = render_to_string("pong/chat_content.html", context, request=request)
-			return JsonResponse({'html': html,
-									'url' : (f"{chat_name_url}")
-				})
-			return render(request, "pong/chat.html", context)
+		if request.POST.get("message_content") :
+			message_content = request.POST.get("message_content")
+			logger.debug("message_content = %s", message_content)
+			logger.debug("context = %s", context)
+			# chat_id = request.POST.get('chat_id')
+			# logger.debug("chat_id = %s", chat_id)
+			# chat = get_object_or_404(Chat, id=chat_id)
+			# logger.debug("chat = %s", chat)
+			chat_name_url = None
+			if chat_name :
+				chat_name_url = chat_name
+			else: 
+				chat_name_url = name_chat
+			chat_object = Chat.objects.get(name=chat_name_url)
+			logger.debug("chat_objet = %s", chat_object)
+			message_object = Message.objects.create(sender=user, content=message_content)
+			message_object.save()
+			send_message(chat_object, message_object)
+			chat_object.save()
+			if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+				html = render_to_string("pong/chat_content.html", context, request=request)
+				return JsonResponse({'html': html,
+										'url' : (f"{chat_name_url}")
+					})
+				return render(request, "pong/chat.html", context)
+		if request.POST.get('user_target') :
+			logger.info("Oui c'est bon")
+			user_target = request.POST.get('user_target')
+			if not user_target :
+				logger.info("On passe par ce chemin")
+				message = " Error : Field Empty"
+				context['message_block'] = message
+				if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+					html = render_to_string("pong/chat_content.html", context, request=request)
+					return JsonResponse({'html': html,
+											'url' : (f"{chat_name_url}")
+						})
+				else:
+					return render(request, "pong/chat.html", context)
+			logger.debug("user_target = %s", user_target)
+			all_users = NewUser.objects.all()
+			message = None
+			found = False
+			for founded in all_users : 
+				if (user_target == founded.pseudo) :
+					if founded.pseudo == user.pseudo :
+						message = "You can't block yourself"
+					else :
+						found = True
+					break
+			if found :
+				BlockedUser.objects.create(blocker=user, blocked_user=user_target)
+				message = f"{user_target} has been blocked"
+			elif not found and not message :
+				message = f"{user_target} doesn't exist"
+			if message :
+				context['message_block'] = message
+			chat_name_url = None
+			if chat_name :
+				chat_name_url = chat_name
+			else: 
+				chat_name_url = name_chat
+			logger.debug("message_block = %s", context['message_block'])
+			logger.debug("context = %s", context)
+			BlockedUser_all = BlockedUser.objects.all()
+			logger.debug("BlockedUser_all = %s", BlockedUser_all)
+			if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+				html = render_to_string("pong/chat_content.html", context, request=request)
+				return JsonResponse({'html': html,
+										'url' : (f"{chat_name_url}")
+					})
+			else:
+				return render(request, "pong/chat.html", context)
 	else:
 		chat_name_url = None
 		if chat_name :
@@ -839,7 +935,7 @@ def is_in_friends_list(username, friend_list) :
 		error_message = f"{username} is not your friend"
 	return (error_message)
 
-def is_blocked(username, blocked_list) :
+def is_blocked_add_chat(username, blocked_list) :
 	toggle = False
 	error_message = None
 	for blocked in blocked_list : 
@@ -853,6 +949,44 @@ def is_blocked(username, blocked_list) :
 	# logger.debug("blocked_list = %s", blocked_list)
 	# # if username in blocked_list :
 	return (error_message)
+
+
+def is_blocked(user, target) :
+	blocked_object = BlockedUser.objects.all()
+	if blocked_object :
+		for block in blocked_object :
+			if block.blocker.pseudo == user.pseudo and block.blocked_user.pseudo == target.pseudo :
+				return (True)
+	return False
+
+# def block_user(request) :
+# 	if request.method == 'POST' :
+# 		logger.info("Oui c'est bon")
+# 		user = NewUser.objects.get(id=(request.session.get('user_id')))
+# 		user_target = request.POST.get('user_target')
+# 		all_users = NewUser.objects.all()
+# 		message = None
+# 		found = False
+# 		for user in all_users : 
+# 			if (user_target == user.pseudo) :
+# 				found = True
+# 				break
+# 		if found :
+# 			BlockedUser.objects.create(blocker=user, blocked_user=user_target)
+# 			message = f"{user_target} has been blocked"
+# 		else :
+# 			message = f"{user_target} doesn't exist"
+# 		logger.debug("message = %s", message)
+# 		if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+# 			return JsonResponse({'message' : message})
+# 		else:
+# 			return redirect('chat')
+# 	else :
+# 		response_data = {'error': 'Invalid request method'}
+# 		if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+# 			return JsonResponse(response_data)
+# 		else:
+# 			return redirect('chat')
 
 def add_chat(request) :
 	if not request.user.is_authenticated:
@@ -923,13 +1057,13 @@ def add_chat(request) :
 			error_message = None
 			other_user = is_in_users(friend_name)
 			if not other_user : 
-				error_message = f"{friend_name} suer doesn't exist"
+				error_message = f"{friend_name} user doesn't exist"
 			if not error_message :
 				friend_list = get_friends(user)
 				logger.debug("friend_list = %s", friend_list)
 				error_message = is_in_friends_list(friend_name, friend_list)
 				if not error_message :
-					error_message = is_blocked(friend_name, add_chat_info['blocked_users'])
+					error_message = is_blocked_add_chat(friend_name, add_chat_info['blocked_users'])
 					if not error_message :
 						error_message = "Tous les filtres ont ete passes"
 						chat_name = other_user.pseudo + " et " + user.pseudo
@@ -939,7 +1073,7 @@ def add_chat(request) :
 						chat_private.save()
 						participant1.save()
 						participant2.save()
-						error_message =  f"You are noz in private conversation with {other_user.pseudo}"
+						error_message =  f"You are now in private conversation with {other_user.pseudo}"
 			if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
 					html = render_to_string("pong/add_chat_content.html", {'message': {
 																		'value' : True,
@@ -988,17 +1122,29 @@ def join_chat(request) :
 		chat_name = request.POST.get("chat_name")
 		# all_chats = Chat.objects.all()
 		error_message = None
+		message = None
+		chat_exist = False
 		for chat in all_chats :
+			logger.info("on passe bien dans la boucle des chat")
 			if (chat_name == chat.name) :
+				chat_exist = True
 				participants = chat.participants.all()
 				for users in participants :
 					if (users == user) :
 						error_message = "You already are in that chat"
 						break
 				if not error_message :
-					Participant.objects.get_or_create(user=user, chat=chat)
-					message = f"YOU JOINED {chat_name}"
-					break
+					if chat.is_private == True :
+						error_message = "You cant't join that chat, it is private"
+					else : 
+						Participant.objects.get_or_create(user=user, chat=chat)
+						message = f"YOU JOINED {chat_name}"
+				break
+		if not chat_exist :
+			logger.info("On passe la aussi")
+			error_message = f"{chat_name} doesn't exist. Please try again"
+		logger.debug("error_message : %s", error_message)
+		logger.debug("list_of_chats : %s", list_of_chats)
 		if error_message :
 			context = {
 				'chat_info' : {
@@ -1036,6 +1182,7 @@ def join_chat(request) :
 				'list_of_chats' : list_of_chats,
 			}
 		}
+		logger.debug("context value = %s", context['chat_info']['value'])
 		if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
 			html = render_to_string("pong/join_chat_content.html", context, request=request)
 			return JsonResponse({'html': html,
@@ -1091,6 +1238,93 @@ def render_chat(request, chat_name) :
 	#     return JsonResponse({'html': html})``
 	# else:
 	#     return HttpResponseRedirect(reverse('login'))
+
+def leave_chat(request) :
+	if not request.user.is_authenticated:
+		if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+			html = render_to_string("pong/login_content.html", {'message': message}, request=request)
+			return JsonResponse({'html': html,
+								'url' : reverse("index")
+			})
+		else:
+			return HttpResponseRedirect(reverse("index"))
+	user = NewUser.objects.get(id=(request.session.get('user_id')))
+	logger.debug("THE USER IS = %s", user)
+	all_chats = Chat.objects.all()
+	list_of_chats = []
+	for chat in all_chats :
+		participants = chat.participants.all()
+		is_in = False
+		for users in participants :
+			logger.debug("chats = %s", chat)
+			logger.debug("user = %s", users)
+			if (users.pseudo == user.pseudo) :
+				is_in = True
+			if is_in :
+				list_of_chats.append(chat)
+				break
+	logger.debug("list_of_chats = %s", list_of_chats)
+	context = {
+		'error_message' : None,
+		'message' : None,
+		'list_of_chats' : []
+	}
+	if list_of_chats : 
+		context['list_of_chats'] = list_of_chats
+	if request.method == "POST" :
+		chat_exist = False
+		chat_name = request.POST.get("chat_name")
+		for chat in all_chats :
+			if chat.name == chat_name :
+				chat_exist = True
+				break
+		if chat_exist :
+			user_in_chat = False
+			for chats in list_of_chats :
+				if chats.name == chat_name :
+					user_in_chat = True
+					break
+			# if user_in_chat :
+			# 	participant_pool = chats.participants.all()
+			# 	for participant in participant_pool :
+			# 		if participant.pseudo == user.pseudo :
+			# 			participant.delete()
+			# 			message = f"You leaved {chat_name}"
+			# 			context['message'] = message
+			# 	participant_pool = chats.participants.all()
+			# 	if not participant_pool :
+			# 		chats.delete()
+			if user_in_chat:
+				participant_pool = chats.participants.all()
+				participant_to_remove = None
+				for participant in participant_pool:
+					if participant.pseudo == user.pseudo:
+						participant_to_remove = participant
+						break
+				if participant_to_remove:
+					chats.participants.remove(participant_to_remove)
+					message = f"You leaved {chats.name}"
+					context['message'] = message
+				participant_pool = chats.participants.all()
+				if not participant_pool:
+					chats.delete()
+				else :
+					chats.save()
+			else :
+				error_message = f"You are not in that chat"
+				context['error_message'] = error_message
+		else :
+			error_message = f"{chat_name} doesn't exist"
+			context['error_message'] = error_message
+	if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+			html = render_to_string("pong/leave_chat_content.html", context, request=request)
+			return JsonResponse({'html': html,
+								'url' : reverse("leave_chat")
+			})
+	else:
+		return render(request, "pong/leave_chat.html", context)
+
+
 
 def logout_view(request):
 	if request.user.is_authenticated:
@@ -1226,6 +1460,34 @@ def profile_view(request):
 															'password_form_errors': password_form_errors,
 															'other_error': other_error
 													})
+
+
+def recup_user_info(user) :
+	url = pyotp.totp.TOTP(user.mfa_hash).provisioning_uri(name=user.email, issuer_name="Pong")
+	qr = qrcode.make(url)
+	buffered = BytesIO()
+	qr.save(buffered)
+	qr_base64 = base64.b64encode(buffered.getvalue()).decode('utf-8')
+	try:
+		user_avatar = user.avatar.url
+	except ValueError:
+		user_avatar = None
+	friends = get_friends(user)
+	other_error  = {
+		"avatar" : None,
+		"email" : None,
+		"pseudo" : None
+	}
+	user_info = {
+					'user_info' : {
+						'user_choice' : user.is_mfa_enabled,
+						'user_url' : qr_base64,
+						'user_pseudo' : user.pseudo,
+						'user_avatar' : user_avatar,
+						'user_friends' : friends,
+					}, 'other_error': other_error
+	}
+	return user_info
 
 
 
